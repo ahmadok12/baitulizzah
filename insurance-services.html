@@ -1,0 +1,1993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Insurance Services – Broadmoor Accounting & Financials</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+/* ═══════════════════════════════
+   CSS VARIABLES
+═══════════════════════════════ */
+:root {
+  --navy: #1a2e5a;
+  --navy-dark: #0f1e3d;
+  --green: #2e8b47;
+  --green-light: #3aad5a;
+  --green-pale: #e8f5ec;
+  --white: #ffffff;
+  --off-white: #f7f9fc;
+  --grey-light: #eef1f6;
+  --grey-mid: #c8d0de;
+  --ink: #1a2030;
+  --text-muted: #6b7a99;
+  --gold: #c8922a;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'DM Sans', sans-serif; color: var(--ink); background: var(--white); }
+a { text-decoration: none; }
+
+/* ═══════════════════════════════
+   TOP BAR
+═══════════════════════════════ */
+.site-header-wrap {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 500;
+}
+
+.top-bar {
+  background: var(--navy-dark);
+  color: rgba(255,255,255,0.85);
+  font-size: 12.5px;
+  font-weight: 500;
+  padding: 8px 5%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 24px;
+  transition: height 0.3s ease, padding 0.3s ease;
+}
+
+.top-bar a {
+  color: rgba(255,255,255,0.85);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.2s;
+}
+
+.top-bar a:hover { color: var(--green-light); }
+
+.whatsapp-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #25d366 !important;
+  font-weight: 600;
+}
+
+.maps-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #4fc3f7 !important;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.maps-link:hover { color: #81d4fa !important; }
+
+.top-bar-divider {
+  width: 1px;
+  height: 14px;
+  background: rgba(255,255,255,0.2);
+}
+
+/* ═══════════════════════════════
+   NAV
+═══════════════════════════════ */
+.site-header-wrap > nav {
+  position: relative;
+  top: auto;
+  z-index: 200;
+  padding: 0 5%;
+  height: 68px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255,255,255,0.97);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(26,46,90,0.09);
+  box-shadow: 0 2px 24px rgba(26,46,90,0.07);
+  transition: height 0.3s ease, box-shadow 0.3s ease;
+}
+
+.site-header-wrap.scrolled > nav {
+  height: 54px;
+  box-shadow: 0 3px 28px rgba(26,46,90,0.12);
+}
+
+.site-header-wrap.scrolled .top-bar {
+  height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  overflow: hidden;
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.nav-logo img, .nav-logo-img {
+  height: 58px;
+  width: auto;
+  transition: height 0.3s ease;
+}
+
+.site-header-wrap.scrolled .nav-logo img,
+.site-header-wrap.scrolled .nav-logo-img { height: 38px; }
+
+.nav-logo-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--navy);
+  letter-spacing: -0.01em;
+}
+
+.nav-logo-text span { color: var(--green); }
+
+.nav-logo-sub {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+.nav-logo-mark {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.nav-logo-copy { display: flex; flex-direction: column; }
+
+.nav-menu {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  list-style: none;
+}
+
+.nav-menu > li { position: relative; }
+
+.nav-menu > li > a {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 10px 14px;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--navy);
+  text-decoration: none;
+  border-radius: 6px;
+  transition: background 0.2s, color 0.2s;
+  white-space: nowrap;
+}
+
+.nav-menu > li > a:hover,
+.nav-menu > li > a.active {
+  background: var(--green-pale);
+  color: var(--green);
+}
+
+.nav-menu > li > a .chevron {
+  font-size: 10px;
+  opacity: 0.6;
+  transition: transform 0.2s;
+}
+
+.nav-menu > li:hover > a .chevron { transform: rotate(180deg); }
+
+.dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  background: var(--white);
+  border: 1px solid rgba(26,46,90,0.09);
+  border-radius: 12px;
+  box-shadow: 0 16px 48px rgba(26,46,90,0.13);
+  min-width: 220px;
+  padding: 8px;
+  z-index: 300;
+  animation: dropIn 0.18s ease;
+}
+
+@keyframes dropIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.nav-menu > li:hover .dropdown { display: block; }
+
+.dropdown a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--navy);
+  text-decoration: none;
+  border-radius: 8px;
+  transition: background 0.15s, color 0.15s;
+}
+
+.dropdown a:hover { background: var(--green-pale); color: var(--green); }
+
+.dropdown-icon {
+  width: 30px; height: 30px;
+  border-radius: 7px;
+  background: var(--grey-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+
+.dropdown a:hover .dropdown-icon { background: rgba(46,139,71,0.15); }
+
+.dropdown-divider {
+  height: 1px;
+  background: var(--grey-light);
+  margin: 6px 8px;
+}
+
+.nav-book {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--green);
+  color: var(--white) !important;
+  padding: 11px 22px;
+  border-radius: 8px;
+  font-size: 13.5px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 16px rgba(46,139,71,0.25);
+  margin-left: 8px;
+}
+
+.nav-book:hover {
+  background: var(--navy);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(26,46,90,0.22);
+}
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  padding: 6px;
+  background: none;
+  border: none;
+}
+
+.hamburger span {
+  display: block;
+  width: 24px; height: 2px;
+  background: var(--navy);
+  border-radius: 2px;
+}
+
+.mobile-nav {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(15,30,61,0.5);
+  z-index: 600;
+  backdrop-filter: blur(4px);
+}
+
+.mobile-nav.open { display: block; }
+
+.mobile-drawer {
+  position: absolute;
+  top: 0; right: 0; bottom: 0;
+  width: min(320px, 85vw);
+  background: var(--white);
+  box-shadow: -8px 0 40px rgba(15,30,61,0.2);
+  padding: 24px 24px 40px;
+  overflow-y: auto;
+  animation: slideIn 0.25s ease;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
+}
+
+.drawer-close {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+.drawer-close button {
+  background: var(--grey-light);
+  border: none;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  font-size: 18px;
+  cursor: pointer;
+  color: var(--navy);
+}
+
+.mobile-menu-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mobile-menu-list a {
+  display: block;
+  padding: 12px 14px;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--navy);
+  text-decoration: none;
+  border-radius: 8px;
+  transition: background 0.15s;
+}
+
+.mobile-menu-list a:hover { background: var(--green-pale); color: var(--green); }
+
+.mobile-submenu {
+  padding-left: 14px;
+  margin: 4px 0;
+  border-left: 2px solid var(--green-pale);
+}
+
+.mobile-submenu a {
+  font-size: 14px;
+  color: var(--text-muted) !important;
+  padding: 9px 14px !important;
+}
+
+.mobile-book {
+  display: block;
+  text-align: center;
+  background: var(--green);
+  color: var(--white) !important;
+  padding: 14px;
+  border-radius: 10px;
+  font-weight: 600;
+  margin-top: 20px;
+}
+
+/* ═══════════════════════════════
+   PAGE OFFSET
+═══════════════════════════════ */
+.page-wrap { padding-top: 108px; }
+
+/* ═══════════════════════════════
+   PAGE HERO / BANNER
+═══════════════════════════════ */
+.service-hero {
+  background: var(--navy-dark);
+  position: relative;
+  overflow: hidden;
+  padding: 72px 6% 68px;
+}
+
+.service-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 5% 90%, rgba(46,139,71,0.14) 0%, transparent 50%),
+    radial-gradient(ellipse at 95% 10%, rgba(200,146,42,0.07) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.service-hero::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--green), var(--green-light), transparent);
+}
+
+.service-hero-inner {
+  max-width: 1140px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.4);
+  margin-bottom: 24px;
+  letter-spacing: 0.03em;
+}
+
+.breadcrumb a { color: rgba(255,255,255,0.45); transition: color 0.2s; }
+.breadcrumb a:hover { color: var(--green-light); }
+.breadcrumb-sep { opacity: 0.35; }
+.breadcrumb-current { color: var(--green-light); }
+
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(46,139,71,0.15);
+  border: 1px solid rgba(58,173,90,0.25);
+  color: var(--green-light);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  border-radius: 100px;
+  margin-bottom: 20px;
+}
+
+.service-hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1.18;
+  max-width: 640px;
+  margin-bottom: 18px;
+}
+
+.service-hero h1 em {
+  font-style: italic;
+  color: var(--green-light);
+}
+
+.service-hero p {
+  font-size: 15.5px;
+  color: rgba(255,255,255,0.55);
+  line-height: 1.75;
+  max-width: 560px;
+  font-weight: 300;
+}
+
+/* ═══════════════════════════════
+   SERVICES SECTION
+═══════════════════════════════ */
+.services-section {
+  background: var(--off-white);
+  padding: 88px 6%;
+}
+
+.services-inner {
+  max-width: 1140px;
+  margin: 0 auto;
+}
+
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 14px;
+}
+
+.section-label::before {
+  content: '';
+  width: 24px;
+  height: 2px;
+  background: var(--green);
+  border-radius: 2px;
+}
+
+.section-heading {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.65rem, 3vw, 2.25rem);
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 12px;
+  line-height: 1.25;
+}
+
+.section-subtext {
+  font-size: 15px;
+  color: var(--text-muted);
+  line-height: 1.7;
+  max-width: 560px;
+  margin-bottom: 56px;
+  font-weight: 300;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+
+.service-card {
+  background: var(--white);
+  border: 1px solid rgba(26,46,90,0.07);
+  border-radius: 16px;
+  padding: 36px 32px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.service-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--green), var(--green-light));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.service-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 48px rgba(26,46,90,0.1);
+  border-color: rgba(46,139,71,0.15);
+}
+
+.service-card:hover::before { transform: scaleX(1); }
+
+.card-icon {
+  width: 52px; height: 52px;
+  border-radius: 13px;
+  background: var(--green-pale);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 22px;
+  transition: background 0.25s;
+}
+
+.service-card:hover .card-icon { background: rgba(46,139,71,0.18); }
+
+.card-icon svg { color: var(--green); }
+
+.card-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+
+.card-body {
+  font-size: 13.5px;
+  color: var(--text-muted);
+  line-height: 1.72;
+  font-weight: 400;
+  margin-bottom: 20px;
+}
+
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.tag {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--green);
+  background: var(--green-pale);
+  padding: 4px 10px;
+  border-radius: 100px;
+  letter-spacing: 0.02em;
+}
+
+/* ═══════════════════════════════
+   WHY BROADMOOR STRIP
+═══════════════════════════════ */
+.why-strip {
+  background: var(--navy);
+  padding: 72px 6%;
+}
+
+.why-inner {
+  max-width: 1140px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: center;
+}
+
+.why-text .section-label { color: var(--green-light); }
+.why-text .section-label::before { background: var(--green-light); }
+
+.why-text .section-heading { color: var(--white); }
+
+.why-text .section-subtext {
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 0;
+}
+
+.why-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.why-item {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.why-num {
+  width: 36px; height: 36px;
+  border-radius: 9px;
+  background: rgba(46,139,71,0.18);
+  border: 1px solid rgba(58,173,90,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--green-light);
+  flex-shrink: 0;
+}
+
+.why-item-text strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--white);
+  margin-bottom: 4px;
+}
+
+.why-item-text span {
+  font-size: 13px;
+  color: rgba(255,255,255,0.45);
+  line-height: 1.65;
+  font-weight: 300;
+}
+
+/* ═══════════════════════════════
+   CONTACT SECTION
+═══════════════════════════════ */
+.contact-section {
+  background: var(--white);
+  padding: 96px 6%;
+}
+
+.contact-inner {
+  max-width: 1140px;
+  margin: 0 auto;
+}
+
+.contact-header {
+  margin-bottom: 56px;
+}
+
+.contact-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.35fr;
+  gap: 56px;
+  align-items: start;
+}
+
+.contact-info-heading {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 8px;
+}
+
+.contact-info-sub {
+  font-size: 13.5px;
+  color: var(--text-muted);
+  line-height: 1.7;
+  font-weight: 300;
+  margin-bottom: 32px;
+  max-width: 320px;
+}
+
+.contact-detail-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 32px;
+}
+
+.contact-detail-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.cd-icon {
+  width: 42px; height: 42px;
+  border-radius: 11px;
+  background: var(--green-pale);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: var(--green);
+}
+
+.cd-label {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.cd-value {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--navy);
+  line-height: 1.55;
+}
+
+.cd-value a {
+  color: var(--navy);
+  transition: color 0.2s;
+}
+
+.cd-value a:hover { color: var(--green); }
+
+.contact-hours {
+  background: var(--off-white);
+  border: 1px solid rgba(26,46,90,0.07);
+  border-radius: 12px;
+  padding: 20px 22px;
+}
+
+.contact-hours h4 {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 12px;
+}
+
+.hours-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--text-muted);
+  padding: 7px 0;
+  border-bottom: 1px solid rgba(26,46,90,0.06);
+  font-weight: 400;
+}
+
+.hours-row:last-child { border-bottom: none; }
+.hours-row span:last-child { font-weight: 500; color: var(--navy); }
+
+.contact-form-wrap {
+  background: var(--off-white);
+  border: 1px solid rgba(26,46,90,0.07);
+  border-radius: 20px;
+  padding: 44px 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.contact-form-wrap::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--green), var(--green-light));
+}
+
+.form-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 6px;
+}
+
+.form-sub {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 28px;
+  font-weight: 300;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--navy);
+  opacity: 0.7;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 13px 16px;
+  border: 1.5px solid rgba(26,46,90,0.12);
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: var(--ink);
+  background: var(--white);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+  appearance: none;
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder { color: var(--grey-mid); }
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px rgba(46,139,71,0.1);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 110px;
+  line-height: 1.6;
+}
+
+.form-group select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7a99' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+}
+
+.form-submit {
+  width: 100%;
+  padding: 15px;
+  background: var(--green);
+  color: var(--white);
+  border: none;
+  border-radius: 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14.5px;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 0.02em;
+  transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 16px rgba(46,139,71,0.25);
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.form-submit:hover {
+  background: var(--navy);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(26,46,90,0.2);
+}
+
+.form-disclaimer {
+  font-size: 11.5px;
+  color: var(--text-muted);
+  text-align: center;
+  margin-top: 14px;
+  line-height: 1.6;
+  font-weight: 300;
+}
+
+/* ═══════════════════════════════
+   FOOTER
+═══════════════════════════════ */
+.site-footer {
+  background: var(--navy-dark);
+  position: relative;
+  overflow: hidden;
+}
+
+.site-footer::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 10% 80%, rgba(46,139,71,0.07) 0%, transparent 50%),
+    radial-gradient(ellipse at 90% 10%, rgba(26,46,90,0.4) 0%, transparent 55%);
+  pointer-events: none;
+}
+
+.site-footer::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--green), var(--green-light), transparent);
+}
+
+.footer-top {
+  padding: 72px 6% 60px;
+  position: relative;
+  z-index: 1;
+}
+
+.footer-inner {
+  max-width: 1140px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.8fr 1fr 1fr 1.4fr;
+  gap: 48px;
+}
+
+.footer-logo-mark {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.footer-logo-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--white);
+  letter-spacing: -0.01em;
+}
+
+.footer-logo-text span { color: var(--green-light); }
+
+.footer-tagline {
+  font-size: 13.5px;
+  color: rgba(255,255,255,0.45);
+  line-height: 1.7;
+  max-width: 260px;
+  margin-bottom: 24px;
+  font-weight: 300;
+}
+
+.footer-social { display: flex; gap: 10px; }
+
+.social-btn {
+  width: 36px; height: 36px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,0.55);
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.2s;
+}
+
+.social-btn:hover {
+  background: rgba(46,139,71,0.25);
+  border-color: rgba(58,173,90,0.4);
+  color: var(--green-light);
+  transform: translateY(-2px);
+}
+
+.footer-col-title {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--green-light);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.footer-col-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(255,255,255,0.07);
+}
+
+.footer-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+.footer-links a {
+  font-size: 13.5px;
+  color: rgba(255,255,255,0.5);
+  text-decoration: none;
+  font-weight: 400;
+  transition: color 0.2s, padding-left 0.2s;
+  display: inline-block;
+}
+
+.footer-links a:hover { color: var(--white); padding-left: 4px; }
+
+.footer-contact-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.footer-contact-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  color: rgba(255,255,255,0.5);
+  line-height: 1.55;
+  font-weight: 300;
+}
+
+.fc-icon {
+  width: 22px; height: 22px;
+  border-radius: 6px;
+  background: rgba(46,139,71,0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+  font-size: 12px;
+  color: var(--green-light);
+}
+
+.footer-contact-list a {
+  color: rgba(255,255,255,0.55);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.footer-contact-list a:hover { color: var(--green-light); }
+
+.footer-whatsapp {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(37,211,102,0.12);
+  border: 1px solid rgba(37,211,102,0.25);
+  color: #25d366;
+  padding: 9px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.footer-whatsapp:hover {
+  background: rgba(37,211,102,0.2);
+  border-color: rgba(37,211,102,0.45);
+}
+
+.footer-bottom {
+  border-top: 1px solid rgba(255,255,255,0.07);
+  padding: 20px 6%;
+  position: relative;
+  z-index: 1;
+}
+
+.footer-bottom-inner {
+  max-width: 1140px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.footer-copy {
+  font-size: 12.5px;
+  color: rgba(255,255,255,0.3);
+  font-weight: 400;
+}
+
+.footer-legal { display: flex; align-items: center; gap: 12px; }
+
+.footer-legal a {
+  font-size: 12.5px;
+  color: rgba(255,255,255,0.3);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.footer-legal a:hover { color: rgba(255,255,255,0.7); }
+
+.footer-legal-dot {
+  width: 3px; height: 3px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  flex-shrink: 0;
+}
+
+/* ═══════════════════════════════
+   FAQ SECTION
+═══════════════════════════════ */
+.faq-section {
+  background: var(--white);
+  padding: 88px 6%;
+}
+
+.faq-inner {
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+.faq-inner .section-label,
+.faq-inner .section-heading,
+.faq-inner .section-subtext {
+  text-align: center;
+}
+
+.faq-inner .section-subtext { margin-bottom: 52px; }
+
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid var(--grey-light);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.faq-item {
+  border-bottom: 1px solid var(--grey-light);
+}
+
+.faq-item:last-child { border-bottom: none; }
+
+.faq-question {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 22px 28px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--navy);
+  transition: background 0.2s, color 0.2s;
+}
+
+.faq-question:hover {
+  background: var(--off-white);
+  color: var(--green);
+}
+
+.faq-item.open .faq-question {
+  background: var(--green-pale);
+  color: var(--green);
+}
+
+.faq-chevron {
+  flex-shrink: 0;
+  transition: transform 0.25s ease;
+  color: var(--text-muted);
+}
+
+.faq-item.open .faq-chevron {
+  transform: rotate(180deg);
+  color: var(--green);
+}
+
+.faq-answer {
+  display: none;
+  padding: 0 28px 22px;
+  background: var(--green-pale);
+}
+
+.faq-item.open .faq-answer { display: block; }
+
+.faq-answer p {
+  font-size: 14.5px;
+  color: var(--text-muted);
+  line-height: 1.78;
+  font-weight: 400;
+}
+
+/* ═══════════════════════════════
+   RESPONSIVE
+═══════════════════════════════ */
+@media (max-width: 1024px) {
+  .services-grid { grid-template-columns: repeat(2, 1fr); }
+  .why-inner { grid-template-columns: 1fr; gap: 40px; }
+  .contact-layout { grid-template-columns: 1fr; gap: 40px; }
+  .footer-inner { grid-template-columns: 1fr 1fr; gap: 40px 32px; }
+  .footer-brand { grid-column: 1 / -1; }
+}
+
+@media (max-width: 768px) {
+  .nav-menu, .nav-book { display: none; }
+  .hamburger { display: flex; }
+  .services-grid { grid-template-columns: 1fr; }
+  .form-row { grid-template-columns: 1fr; }
+  .contact-form-wrap { padding: 32px 24px; }
+  .page-wrap { padding-top: 90px; }
+  .top-bar-phone,
+  .top-bar-address { display: none !important; }
+}
+
+.drawer-address {
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid var(--grey-light);
+}
+
+.drawer-address-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.drawer-address-row svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+  stroke: var(--text-muted);
+}
+
+.drawer-address-row a {
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.drawer-address-row a:hover { color: var(--green); }
+
+@media (max-width: 560px) {
+  .footer-inner { grid-template-columns: 1fr; gap: 36px; }
+  .footer-brand { grid-column: auto; }
+  .footer-top { padding: 48px 5% 40px; }
+  .footer-bottom { padding: 18px 5%; }
+  .footer-bottom-inner { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .footer-legal { flex-wrap: wrap; gap: 10px; }
+  .service-hero { padding: 52px 5% 48px; }
+  .services-section, .why-strip, .contact-section { padding: 64px 5%; }
+}
+
+/* ═══════════════════════════════
+   SUBTLE PAGE ANIMATION
+═══════════════════════════════ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.service-hero-inner { animation: fadeUp 0.55s ease both; }
+.services-grid .service-card { animation: fadeUp 0.5s ease both; }
+.service-card:nth-child(1)  { animation-delay: 0.05s; }
+.service-card:nth-child(2)  { animation-delay: 0.12s; }
+.service-card:nth-child(3)  { animation-delay: 0.19s; }
+.service-card:nth-child(4)  { animation-delay: 0.26s; }
+.service-card:nth-child(5)  { animation-delay: 0.33s; }
+.service-card:nth-child(6)  { animation-delay: 0.40s; }
+.service-card:nth-child(7)  { animation-delay: 0.47s; }
+.service-card:nth-child(8)  { animation-delay: 0.54s; }
+.service-card:nth-child(9)  { animation-delay: 0.61s; }
+.service-card:nth-child(10) { animation-delay: 0.68s; }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════
+     HEADER + NAV
+═══════════════════════════ -->
+<div class="site-header-wrap" id="siteHeader">
+
+  <!-- Top bar -->
+  <div class="top-bar">
+    <a href="tel:+18882867860" class="top-bar-phone">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.68A2 2 0 012 .93h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+      +1 888 286 7860
+    </a>
+    <div class="top-bar-divider top-bar-phone"></div>
+    <a href="mailto:info@broadmooraccounting.ca">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      info@broadmooraccounting.ca
+    </a>
+    <div class="top-bar-divider"></div>
+    <a href="https://wa.me/18882867860" class="whatsapp-link" target="_blank">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.121 1.532 5.85L0 24l6.335-1.51A11.933 11.933 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.792 9.792 0 01-5.032-1.388l-.36-.214-3.762.897.944-3.67-.235-.375A9.79 9.79 0 012.182 12C2.182 6.58 6.58 2.182 12 2.182S21.818 6.58 21.818 12 17.42 21.818 12 21.818z"/></svg>
+      WhatsApp
+    </a>
+    <div class="top-bar-divider top-bar-address"></div>
+    <a href="https://maps.google.com" class="maps-link top-bar-address" target="_blank">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      Sherwood Park, AB
+    </a>
+  </div>
+
+  <!-- Main nav -->
+  <nav>
+    <a href="#" class="nav-logo">
+      <img src="data:image/png;base64,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" alt="Broadmoor Accounting &amp; Financials" class="nav-logo-img">
+    </a>
+
+    <ul class="nav-menu">
+      <li><a href="#">Home</a></li>
+      <li>
+        <a href="#" class="active">Services <span class="chevron">▾</span></a>
+        <div class="dropdown">
+          <a href="#">
+            <span class="dropdown-icon">📊</span>
+            Accounting Services
+          </a>
+          <a href="#">
+            <span class="dropdown-icon">🛡️</span>
+            Insurance Services
+          </a>
+          <a href="#">
+            <span class="dropdown-icon">🏠</span>
+            Mortgage Services
+          </a>
+          <a href="#">
+            <span class="dropdown-icon">📈</span>
+            Investment Services
+          </a>
+          <div class="dropdown-divider"></div>
+          <a href="#">
+            <span class="dropdown-icon">✦</span>
+            Other Services
+          </a>
+        </div>
+      </li>
+      <li><a href="#contact">Contact Us</a></li>
+    </ul>
+
+    <a href="#contact" class="nav-book">📅 Book Free Consultation</a>
+
+    <button class="hamburger" onclick="document.getElementById('mobileNav').classList.toggle('open')" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+</div>
+
+<!-- Mobile Nav Drawer -->
+<div class="mobile-nav" id="mobileNav" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="mobile-drawer">
+    <div class="drawer-close">
+      <button onclick="document.getElementById('mobileNav').classList.remove('open')">✕</button>
+    </div>
+    <ul class="mobile-menu-list">
+      <li><a href="#">Home</a></li>
+      <li>
+        <a href="#" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='block'?'none':'block';return false;">Services ▾</a>
+        <div class="mobile-submenu" style="display:none">
+          <a href="#">📊 Accounting Services</a>
+          <a href="#">🛡️ Insurance Services</a>
+          <a href="#">🏠 Mortgage Services</a>
+          <a href="#">📈 Investment Services</a>
+          <a href="#">✦ Other Services</a>
+        </div>
+      </li>
+      <li><a href="#contact">Contact Us</a></li>
+    </ul>
+    <a href="#contact" class="mobile-book">📅 Book Free Consultation</a>
+
+    <div class="drawer-address">
+      <div class="drawer-address-row">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <a href="https://maps.google.com" target="_blank">12 Blackfoot Road, Unit #6<br>Sherwood Park, AB&nbsp;&nbsp;T8A 4P4</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════
+     PAGE CONTENT
+═══════════════════════════ -->
+<div class="page-wrap">
+
+  <!-- ── Hero Banner ── -->
+  <section class="service-hero">
+    <div class="service-hero-inner">
+      <div class="breadcrumb">
+        <a href="#">Home</a>
+        <span class="breadcrumb-sep">›</span>
+        <span class="breadcrumb-current">Insurance Services</span>
+      </div>
+
+      <div class="hero-eyebrow">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Life · Health · Property · Group Benefits
+      </div>
+
+      <h1>Insurance <em>Services</em></h1>
+      <p>Comprehensive personal and business insurance solutions to protect what matters most — your family, your health, your home, and your future. We work with leading Canadian insurers to find the right coverage at the right price.</p>
+    </div>
+  </section>
+
+
+  <!-- ── Services Grid ── -->
+  <section class="services-section">
+    <div class="services-inner">
+
+      <div class="section-label">What We Offer</div>
+      <h2 class="section-heading">Coverage for Every Stage of Life</h2>
+      <p class="section-subtext">From protecting your income to insuring your home and your pets, our licensed advisors guide you through every insurance decision with clarity and care.</p>
+
+      <div class="services-grid">
+
+        <!-- 1. Life Insurance -->
+        <div class="service-card">
+          <div class="card-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
+            </svg>
+          </div>
+          <h3 class="card-title">Life Insurance</h3>
+          <p class="card-body">Protect your loved ones with the right life insurance policy. We help you compare Term, Universal Life, and Whole Life options to match your budget, coverage needs, and long-term financial goals.</p>
+          <div class="card-tags">
+            <span class="tag">Term Life</span>
+            <span class="tag">Universal Life</span>
+            <span class="tag">Whole Life</span>
+            <span class="tag">Estate Planning</span>
+          </div>
+        </div>
+
+        <!-- 2. Critical Illness -->
+        <div class="service-card">
+          <div class="card-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+            </svg>
+          </div>
+          <h3 class="card-title">Critical Illness Insurance</h3>
+          <p class="card-body">Receive a lump-sum, tax-free payment upon diagnosis of a covered critical illness such as cancer, heart attack, or stroke — giving you financial flexibility when you need it most.</p>
+          <div class="card-tags">
+            <span class="tag">Cancer</span>
+            <span class="tag">Heart Attack</span>
+            <span class="tag">Stroke</span>
+            <span class="tag">Lump-Sum Benefit</span>
+          </div>
+        </div>
+
+        <!-- 3. Disability Insurance -->
+        <div class="service-card">
+          <div class="card-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="8" r="4"/><path d="M6 20v-2a4 4 0 014-4h4a4 4 0 014 4v2"/>
+            </svg>
+          </div>
+          <h3 class="card-title">Disability Insurance</h3>
+          <p class="card-body">Your ability to earn an income is your most valuable asset. Short-term and long-term disability policies replace a portion of your income if illness or injury prevents you from working.</p>
+          <div class="card-tags">
+            <span class="tag">Short-Term Disability</span>
+            <span class="tag">Long-Term Disability</span>
+            <span class="tag">Own Occupation</span>
+          </div>
+        </div>
+
+        <!-- 4. Mortgage Insurance -->
+        <div class="service-card">
+          <div class="card-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+          </div>
+          <h3 class="card-title">Mortgage Insurance</h3>
+          <p class="card-body">Ensure your family can remain in their home if the unexpected happens. Mortgage protection insurance pays out your mortgage balance so your loved ones are never forced to sell the family home.</p>
+          <div class="card-tags">
+            <span class="tag">Mortgage Protection</span>
+            <span class="tag">Decreasing Coverage</span>
+            <span class="tag">Portability</span>
+          </div>
+        </div>
+
+        <!-- 5. Long Term Care -->
+        <div class="service-card">
+          <div class="card-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="8" width="18" height="13" rx="2"/><path d="M8 8V5a4 4 0 018 0v3"/><line x1="12" y1="13" x2="12" y2="17"/><line x1="10" y1="15" x2="14" y2="15"/>
+            </svg>
+          </div>
+          <h3 class="card-title">Long Term Care Insurance</h3>
+          <p class="card-body">Plan for the cost of assisted living, home care, or nursing facilities as you age. Long term care coverage preserves your retirement savings and protects your family from unexpected caregiving costs.</p>
+          <div class="card-tags">
+            <span class="tag">Home Care</span>
+            <span class="tag">Nursing Facilities</span>
+            <span class="tag">Retirement Planning</span>
+          </div>
+        </div>
+
+        <!-- 6. Travel & Super Visa -->
+        <div class="service-card">
+          <div class="card-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/>
+            </svg>
+          </div>
+          <h3 class="card-title">Travel &amp; Super Visa Insurance</h3>
+          <p class="card-body">Stay covered when travelling abroad or visiting Canada. We specialize in Super Visa medical insurance required for parents and grandparents visiting Canada for up to two years at a time.</p>
+          <div class="card-tags">
+            <span class="tag">Super Visa</span>
+            <span class="tag">Emergency Medical</span>
+            <span class="tag">Trip Cancellation</span>
+            <span class="tag">Visitors to Canada</span>
+          </div>
+        </div>
+
+        <!-- 7. Pet Insurance -->
+        <div class="service-card">
+          <div class="card-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M10 5.172C10 3.782 8.423 2.679 6.5 3c-2.823.47-4.113 6.006-4 7 .08.703 1.725 1.722 3.656 1 1.261-.472 1.96-1.45 2.344-2.5"/><path d="M14.267 5.172c0-1.39 1.577-2.493 3.5-2.172 2.823.47 4.113 6.006 4 7-.08.703-1.725 1.722-3.656 1-1.261-.472-1.96-1.45-2.344-2.5"/><path d="M8 14v.5"/><path d="M16 14v.5"/><path d="M11.25 16.25h1.5L12 17l-.75-.75z"/><path d="M4.42 11.247A13.152 13.152 0 004 14.556C4 18.728 7.582 21 12 21s8-2.272 8-6.444c0-1.061-.162-2.2-.493-3.309m-9.243-6.082A8.801 8.801 0 0112 5c.78 0 1.5.108 2.161.306"/>
+            </svg>
+          </div>
+          <h3 class="card-title">Pet Insurance</h3>
+          <p class="card-body">Unexpected veterinary bills can be significant. Pet insurance helps cover the cost of accidents, illnesses, surgeries, and routine wellness care — so you never have to choose between your pet's health and your finances.</p>
+          <div class="card-tags">
+            <span class="tag">Accident & Illness</span>
+            <span class="tag">Wellness Coverage</span>
+            <span class="tag">Cats & Dogs</span>
+          </div>
+        </div>
+
+        <!-- 8. Health & Dental -->
+        <div class="service-card">
+          <div class="card-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+          </div>
+          <h3 class="card-title">Health &amp; Dental Plan</h3>
+          <p class="card-body">Individual and family health and dental plans to supplement provincial coverage. Includes prescriptions, dental cleanings, paramedical services (physiotherapy, massage), and vision care.</p>
+          <div class="card-tags">
+            <span class="tag">Dental</span>
+            <span class="tag">Prescriptions</span>
+            <span class="tag">Vision Care</span>
+            <span class="tag">Paramedical</span>
+          </div>
+        </div>
+
+        <!-- 9. Group Health Benefits -->
+        <div class="service-card">
+          <div class="card-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/>
+            </svg>
+          </div>
+          <h3 class="card-title">Group Health Benefits</h3>
+          <p class="card-body">Attract and retain top talent with a competitive employee benefits package. We design and administer group health, dental, disability, and life insurance plans tailored to your workforce and budget.</p>
+          <div class="card-tags">
+            <span class="tag">Employee Benefits</span>
+            <span class="tag">Group Life</span>
+            <span class="tag">Group Disability</span>
+            <span class="tag">Small Business</span>
+          </div>
+        </div>
+
+        <!-- 10. Home & Auto -->
+        <div class="service-card">
+          <div class="card-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
+            </svg>
+          </div>
+          <h3 class="card-title">Home &amp; Auto Insurance</h3>
+          <p class="card-body">Comprehensive home and auto coverage from trusted Canadian insurers. We compare rates across multiple providers to find you the best protection for your property and vehicles at the most competitive price.</p>
+          <div class="card-tags">
+            <span class="tag">Home Insurance</span>
+            <span class="tag">Auto Insurance</span>
+            <span class="tag">Tenant Insurance</span>
+            <span class="tag">Bundle Discounts</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ── Why Broadmoor ── -->
+  <section class="why-strip">
+    <div class="why-inner">
+      <div class="why-text">
+        <div class="section-label">Our Commitment</div>
+        <h2 class="section-heading">Why Albertans Trust Broadmoor for Insurance</h2>
+        <p class="section-subtext">We work independently — not for any single insurer — which means our only obligation is finding the best coverage for your unique situation and budget.</p>
+      </div>
+
+      <div class="why-list">
+        <div class="why-item">
+          <div class="why-num">01</div>
+          <div class="why-item-text">
+            <strong>Independent &amp; Unbiased Advice</strong>
+            <span>We are not captive to any one insurer. We compare products from multiple top-rated Canadian carriers to find your best option.</span>
+          </div>
+        </div>
+        <div class="why-item">
+          <div class="why-num">02</div>
+          <div class="why-item-text">
+            <strong>Licensed Advisors</strong>
+            <span>Our team holds the required provincial licences and stays current with changing insurance products, regulations, and industry best practices.</span>
+          </div>
+        </div>
+        <div class="why-item">
+          <div class="why-num">03</div>
+          <div class="why-item-text">
+            <strong>Bundled Financial Planning</strong>
+            <span>Insurance works best alongside your tax, investment, and mortgage strategy. Our integrated approach ensures nothing falls through the cracks.</span>
+          </div>
+        </div>
+        <div class="why-item">
+          <div class="why-num">04</div>
+          <div class="why-item-text">
+            <strong>Claims Support &amp; Policy Reviews</strong>
+            <span>We assist with claims and conduct regular policy reviews so your coverage evolves as your life circumstances change over time.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ── FAQ ── -->
+  <section class="faq-section" id="faq">
+    <div class="faq-inner">
+      <div class="section-label">Frequently Asked Questions</div>
+      <h2 class="section-heading">Your Insurance Questions, Answered</h2>
+      <p class="section-subtext">Have more questions? Our advisors are happy to help — book a free consultation today.</p>
+
+      <div class="faq-list">
+
+        <div class="faq-item">
+          <button class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+            <span>How do I know which type of life insurance is right for me?</span>
+            <svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="faq-answer">
+            <p>The right type depends on your goals. Term life insurance is typically more affordable and is ideal if you need coverage for a defined period — for example, while you have a mortgage or young children. Whole Life and Universal Life are permanent policies that also build cash value over time and can be used as part of an estate or tax planning strategy. Our advisors will walk you through the tradeoffs during a free consultation.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+            <span>What is Super Visa insurance and who needs it?</span>
+            <svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="faq-answer">
+            <p>The Canadian Super Visa allows parents and grandparents of Canadian citizens or permanent residents to visit Canada for up to two years at a time. A mandatory condition of the Super Visa application is proof of Canadian private medical insurance with a minimum of $100,000 in coverage for at least one year. We specialize in Super Visa-compliant policies and can issue same-day proof of insurance letters required for your application.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+            <span>How much disability insurance coverage do I need?</span>
+            <svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="faq-answer">
+            <p>Most disability insurance policies replace between 60–85% of your pre-disability earned income, up to a monthly benefit cap set by the insurer. A general rule of thumb is to target enough monthly benefit to cover your essential living expenses — mortgage or rent, utilities, food, and debt payments. We will review your income, existing group coverage through your employer, and any government benefits (CPP disability) to determine the appropriate top-up amount.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+            <span>Can a small business afford group health benefits?</span>
+            <svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="faq-answer">
+            <p>Yes. Group benefit plans are available for businesses with as few as two employees, and many carriers offer flexible, cost-effective options designed specifically for small businesses. Additionally, employer premiums paid toward group benefits are generally a deductible business expense, making them tax-efficient for both the employer and the employee. We will design a plan that fits your headcount and budget.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+            <span>How does critical illness insurance differ from disability insurance?</span>
+            <svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="faq-answer">
+            <p>Critical illness insurance pays a one-time, lump-sum tax-free benefit upon diagnosis of a covered condition (e.g., cancer, heart attack, stroke), regardless of whether you are still able to work. Disability insurance pays a monthly income replacement benefit only if you cannot work due to illness or injury. Many Canadians carry both policies together — critical illness covers immediate extraordinary expenses, while disability provides ongoing monthly income replacement during recovery.</p>
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-question" onclick="this.parentElement.classList.toggle('open')">
+            <span>What does a free insurance consultation involve?</span>
+            <svg class="faq-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="faq-answer">
+            <p>During your free initial consultation — available in person, by phone, or video call — we review your current coverage, identify any gaps, and discuss your priorities. We then prepare a no-obligation comparison of suitable products from multiple insurers. There is no pressure to purchase, and our advice is genuinely independent. Most clients find they save money and get better coverage by shopping through a broker rather than going directly to a single insurer.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ── Contact ── -->
+  <section class="contact-section" id="contact">
+    <div class="contact-inner">
+
+      <div class="contact-header">
+        <div class="section-label">Get In Touch</div>
+        <h2 class="section-heading">Book a Free Consultation</h2>
+      </div>
+
+      <div class="contact-layout">
+
+        <!-- Left: Contact Info -->
+        <div class="contact-info">
+          <h3 class="contact-info-heading">Broadmoor Accounting &amp; Financials</h3>
+          <p class="contact-info-sub">Reach us by phone, email, or in person at our Sherwood Park office. Initial consultations are complimentary.</p>
+
+          <ul class="contact-detail-list">
+            <li>
+              <div class="cd-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.68A2 2 0 012 .93h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+              </div>
+              <div>
+                <div class="cd-label">Mobile</div>
+                <div class="cd-value"><a href="tel:+18882867860">+1 (888) 286-7860</a></div>
+              </div>
+            </li>
+            <li>
+              <div class="cd-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              </div>
+              <div>
+                <div class="cd-label">Email</div>
+                <div class="cd-value"><a href="mailto:info@broadmooraccounting.ca">info@broadmooraccounting.ca</a></div>
+              </div>
+            </li>
+            <li>
+              <div class="cd-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              </div>
+              <div>
+                <div class="cd-label">Office Address</div>
+                <div class="cd-value">12 Blackfoot Road, Unit #6<br>Sherwood Park, AB&nbsp;&nbsp;T8A 4P4</div>
+              </div>
+            </li>
+          </ul>
+
+          <div class="contact-hours">
+            <h4>Office Hours</h4>
+            <div class="hours-row"><span>Monday – Friday</span><span>8:30 AM – 6:00 PM</span></div>
+            <div class="hours-row"><span>Saturday</span><span>10:00 AM – 3:00 PM</span></div>
+            <div class="hours-row"><span>Sunday</span><span>Closed</span></div>
+          </div>
+        </div>
+
+        <!-- Right: Contact Form -->
+        <div class="contact-form-wrap">
+          <h3 class="form-title">Send Us a Message</h3>
+          <p class="form-sub">We'll respond within one business day.</p>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="fname">First Name</label>
+              <input type="text" id="fname" placeholder="Jane">
+            </div>
+            <div class="form-group">
+              <label for="lname">Last Name</label>
+              <input type="text" id="lname" placeholder="Smith">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" placeholder="jane@example.com">
+            </div>
+            <div class="form-group">
+              <label for="phone">Phone Number</label>
+              <input type="tel" id="phone" placeholder="+1 (780) 000-0000">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="service">Insurance Type</label>
+            <select id="service">
+              <option value="" disabled selected>Select an insurance type…</option>
+              <option>Life Insurance (Term)</option>
+              <option>Life Insurance (Universal or Whole)</option>
+              <option>Critical Illness Insurance</option>
+              <option>Disability Insurance</option>
+              <option>Mortgage Insurance</option>
+              <option>Long Term Care Insurance</option>
+              <option>Travel &amp; Super Visa Insurance</option>
+              <option>Pet Insurance</option>
+              <option>Health &amp; Dental Plan</option>
+              <option>Group Health Benefits</option>
+              <option>Home &amp; Auto Insurance</option>
+              <option>Other / General Inquiry</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="message">Message</label>
+            <textarea id="message" placeholder="Briefly describe your situation or what coverage you're looking for…"></textarea>
+          </div>
+
+          <button class="form-submit" type="submit">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            Send Message
+          </button>
+
+          <p class="form-disclaimer">Your information is confidential and protected under our Privacy Policy.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════
+       FOOTER
+  ═══════════════════════════ -->
+  <footer class="site-footer">
+    <div class="footer-top">
+      <div class="footer-inner">
+
+        <div class="footer-col footer-brand">
+          <div class="footer-logo-mark">
+            <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+              <rect width="36" height="36" rx="9" fill="rgba(46,139,71,0.18)"/>
+              <path d="M10 24 L18 10 L26 24" stroke="#3aad5a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+              <path d="M13.5 20 L22.5 20" stroke="#3aad5a" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <span class="footer-logo-text">Broadmoor<span>.</span></span>
+          </div>
+          <p class="footer-tagline">Accounting &amp; Financials — trusted expertise across tax, insurance, investments, and mortgages.</p>
+          <div class="footer-social">
+            <a href="#" aria-label="LinkedIn" class="social-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
+            </a>
+            <a href="#" aria-label="Facebook" class="social-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+            </a>
+            <a href="#" aria-label="Instagram" class="social-btn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h4 class="footer-col-title">Services</h4>
+          <ul class="footer-links">
+            <li><a href="#">Accounting &amp; Tax Services</a></li>
+            <li><a href="#">Insurance Services</a></li>
+            <li><a href="#">Investment Services</a></li>
+            <li><a href="#">Mortgages</a></li>
+            <li><a href="#">Other Services</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4 class="footer-col-title">Company</h4>
+          <ul class="footer-links">
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Testimonials</a></li>
+            <li><a href="#">Partners</a></li>
+            <li><a href="#">Contact Us</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4 class="footer-col-title">Get In Touch</h4>
+          <ul class="footer-contact-list">
+            <li>
+              <span class="fc-icon">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              </span>
+              <span>12 Blackfoot Road Unit #6<br>Sherwood Park, AB T8A 4P4</span>
+            </li>
+            <li>
+              <span class="fc-icon">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81a19.79 19.79 0 01-3.07-8.68A2 2 0 012 .93h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
+              </span>
+              <a href="tel:+18882867860">+1 888 286 7860</a>
+            </li>
+            <li>
+              <span class="fc-icon">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              </span>
+              <a href="mailto:info@broadmooraccounting.ca">info@broadmooraccounting.ca</a>
+            </li>
+            <li>
+              <span class="fc-icon">🕐</span>
+              <span>Mon–Fri: 8:30 AM – 6:00 PM<br>Sat: 10:00 AM – 3:00 PM</span>
+            </li>
+          </ul>
+          <a href="https://wa.me/18882867860" class="footer-whatsapp" target="_blank">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.121 1.532 5.85L0 24l6.335-1.51A11.933 11.933 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.792 9.792 0 01-5.032-1.388l-.36-.214-3.762.897.944-3.67-.235-.375A9.79 9.79 0 012.182 12C2.182 6.58 6.58 2.182 12 2.182S21.818 6.58 21.818 12 17.42 21.818 12 21.818z"/></svg>
+            Chat on WhatsApp
+          </a>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <div class="footer-bottom-inner">
+        <p class="footer-copy">© 2025 Broadmoor Accounting &amp; Financials. All rights reserved.</p>
+        <div class="footer-legal">
+          <a href="#">Privacy Policy</a>
+          <div class="footer-legal-dot"></div>
+          <a href="#">Terms of Use</a>
+          <div class="footer-legal-dot"></div>
+          <a href="#">Disclaimer</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</div><!-- end .page-wrap -->
+
+<script>
+  // Sticky header shrink on scroll
+  const header = document.getElementById('siteHeader');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 40) {
+      header.classList.add('scrolled');
+    } else {
+      header.classList.remove('scrolled');
+    }
+  });
+</script>
+
+</body>
+</html>
