@@ -69,7 +69,51 @@
   }
   .nav-cta:hover { background: var(--mid-green); transform: translateY(-1px); }
   .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
-  .hamburger span { width: 24px; height: 2px; background: var(--soft-green); border-radius: 2px; }
+  .hamburger span { width: 24px; height: 2px; background: var(--soft-green); border-radius: 2px; transition: transform 0.3s, opacity 0.3s; }
+  nav { transition: height 0.3s ease, box-shadow 0.3s ease, background 0.3s ease; }
+  nav.scrolled {
+    height: 56px;
+    background: rgba(250,246,240,0.98);
+    box-shadow: 0 4px 24px rgba(45,106,79,0.12);
+  }
+
+  /* Mobile nav panel */
+  .mobile-nav {
+    display: none;
+    position: fixed;
+    top: 68px;
+    left: 0; right: 0;
+    background: rgba(250,246,240,0.98);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 1.25rem 5%;
+    flex-direction: column;
+    gap: 0.75rem;
+    z-index: 99;
+    box-shadow: 0 8px 30px rgba(45,106,79,0.1);
+    transform: translateY(-10px);
+    opacity: 0;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+  }
+  .mobile-nav.open {
+    display: flex;
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .mobile-nav a {
+    text-decoration: none;
+    color: var(--text);
+    font-size: 0.95rem;
+    font-weight: 600;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--border);
+    transition: color 0.2s;
+  }
+  .mobile-nav a:last-child { border-bottom: none; }
+  .mobile-nav a:hover { color: var(--soft-green); }
+  .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
   /* GEOMETRIC DECORATIONS */
   .geo-pattern {
@@ -627,10 +671,19 @@
     <li><a href="file:///C:/Users/Hameed%20Computer/Downloads/bait-ul-izzah-quran-academy.html#contact">Contact</a></li>
   </ul>
   <a href="https://forms.gle/1b2ymrsDNQQpyJKC7" target="_blank" class="nav-cta">Register Now</a>
-  <div class="hamburger" onclick="this.classList.toggle(&#39;open&#39;)">
+  <div class="hamburger" id="hamburger">
     <span></span><span></span><span></span>
   </div>
 </nav>
+
+<!-- MOBILE NAV PANEL -->
+<div class="mobile-nav" id="mobileNav">
+  <a href="#courses" onclick="closeMobileNav()">Courses</a>
+  <a href="#teacher" onclick="closeMobileNav()">Teacher</a>
+  <a href="#reviews" onclick="closeMobileNav()">Reviews</a>
+  <a href="#contact" onclick="closeMobileNav()">Contact</a>
+  <a href="https://forms.gle/1b2ymrsDNQQpyJKC7" target="_blank" class="nav-cta" style="text-align:center; margin-top:0.25rem;">Register Now</a>
+</div>
 
 <!-- HERO -->
 <section class="hero" id="home">
@@ -1028,6 +1081,37 @@ document.querySelectorAll('.courses-grid, .why-grid, .reviews-grid, .videos-grid
   grid.querySelectorAll('.fade-in').forEach((el, i) => {
     el.style.transitionDelay = (i * 0.08) + 's';
   });
+});
+
+// Navbar scroll effect
+const nav = document.querySelector('nav');
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 40) {
+    nav.classList.add('scrolled');
+  } else {
+    nav.classList.remove('scrolled');
+  }
+}, { passive: true });
+
+// Hamburger + mobile nav
+const hamburger = document.getElementById('hamburger');
+const mobileNav = document.getElementById('mobileNav');
+
+hamburger.addEventListener('click', () => {
+  hamburger.classList.toggle('open');
+  mobileNav.classList.toggle('open');
+});
+
+function closeMobileNav() {
+  hamburger.classList.remove('open');
+  mobileNav.classList.remove('open');
+}
+
+// Close mobile nav on outside click
+document.addEventListener('click', (e) => {
+  if (!nav.contains(e.target) && !mobileNav.contains(e.target)) {
+    closeMobileNav();
+  }
 });
 </script>
 
