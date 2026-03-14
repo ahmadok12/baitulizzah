@@ -202,7 +202,7 @@ a { text-decoration: none; }
 .dropdown {
   display: none;
   position: absolute;
-  top: calc(100% + 8px);
+  top: 100%;
   left: 0;
   background: var(--white);
   border: 1px solid rgba(26,46,90,0.09);
@@ -212,6 +212,15 @@ a { text-decoration: none; }
   padding: 8px;
   z-index: 300;
   animation: dropIn 0.18s ease;
+}
+
+.dropdown::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: 0;
+  right: 0;
+  height: 8px;
 }
 
 @keyframes dropIn {
@@ -1346,9 +1355,9 @@ a { text-decoration: none; }
       +1 888 286 7860
     </a>
     <div class="top-bar-divider top-bar-phone"></div>
-    <a href="mailto:info@broadmooraccounting.ca">
+    <a href="/cdn-cgi/l/email-protection#f69f989099b694849997929b999984979595998398829f9891d89597">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-      info@broadmooraccounting.ca
+      <span class="__cf_email__" data-cfemail="f29b9c949db290809d93969f9d9d809391919d879c869b9c95dc9193">[email&#160;protected]</span>
     </a>
     <div class="top-bar-divider"></div>
     <a href="https://wa.me/18882867860" class="whatsapp-link" target="_blank">
@@ -1371,34 +1380,35 @@ a { text-decoration: none; }
     </a>
 
     <ul class="nav-menu">
-      <li><a href="#">Home</a></li>
+      <li><a href="index.html">Home</a></li>
       <li>
         <a href="#" class="active">Services <span class="chevron">▾</span></a>
         <div class="dropdown">
-          <a href="#">
+          <a href="accounting-services.html">
             <span class="dropdown-icon">📊</span>
             Accounting Services
           </a>
-          <a href="#">
+          <a href="insurance-services.html">
             <span class="dropdown-icon">🛡️</span>
             Insurance Services
           </a>
-          <a href="#">
+          <a href="mortgage-services.html">
             <span class="dropdown-icon">🏠</span>
             Mortgage Services
           </a>
-          <a href="#">
+          <a href="investment-services.html">
             <span class="dropdown-icon">📈</span>
             Investment Services
           </a>
           <div class="dropdown-divider"></div>
-          <a href="#">
+          <a href="other-services.html">
             <span class="dropdown-icon">✦</span>
             Other Services
           </a>
         </div>
       </li>
-      <li><a href="#contact">Contact Us</a></li>
+      <li><a href="financial-calculators.html">Financial Calculators</a></li>
+      <li><a href="contact-us.html">Contact Us</a></li>
     </ul>
 
     <a href="#contact" class="nav-book">📅 Book Free Consultation</a>
@@ -1416,18 +1426,19 @@ a { text-decoration: none; }
       <button onclick="document.getElementById('mobileNav').classList.remove('open')">✕</button>
     </div>
     <ul class="mobile-menu-list">
-      <li><a href="#">Home</a></li>
+      <li><a href="index.html">Home</a></li>
       <li>
         <a href="#" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='block'?'none':'block';return false;">Services ▾</a>
         <div class="mobile-submenu" style="display:none">
-          <a href="#">📊 Accounting Services</a>
-          <a href="#">🛡️ Insurance Services</a>
-          <a href="#">🏠 Mortgage Services</a>
-          <a href="#">📈 Investment Services</a>
-          <a href="#">✦ Other Services</a>
+          <a href="accounting-services.html">📊 Accounting Services</a>
+          <a href="insurance-services.html">🛡️ Insurance Services</a>
+          <a href="mortgage-services.html">🏠 Mortgage Services</a>
+          <a href="investment-services.html">📈 Investment Services</a>
+          <a href="other-services.html">✦ Other Services</a>
         </div>
       </li>
-      <li><a href="#contact">Contact Us</a></li>
+      <li><a href="financial-calculators.html">🧮 Financial Calculators</a></li>
+      <li><a href="contact-us.html">Contact Us</a></li>
     </ul>
     <a href="#contact" class="mobile-book">📅 Book Free Consultation</a>
 
@@ -1746,7 +1757,7 @@ a { text-decoration: none; }
               </div>
               <div>
                 <div class="cd-label">Email</div>
-                <div class="cd-value"><a href="mailto:info@broadmooraccounting.ca">info@broadmooraccounting.ca</a></div>
+                <div class="cd-value"><a href="/cdn-cgi/l/email-protection#e48d8a828ba486968b8580898b8b968587878b918a908d8a83ca8785"><span class="__cf_email__" data-cfemail="ed84838b82ad8f9f828c898082829f8c8e8e8298839984838ac38e8c">[email&#160;protected]</span></a></div>
               </div>
             </li>
             <li>
@@ -1898,7 +1909,7 @@ a { text-decoration: none; }
               <span class="fc-icon">
                 <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
               </span>
-              <a href="mailto:info@broadmooraccounting.ca">info@broadmooraccounting.ca</a>
+              <a href="/cdn-cgi/l/email-protection#1e777078715e7c6c717f7a7371716c7f7d7d716b706a777079307d7f"><span class="__cf_email__" data-cfemail="41282f272e0123332e20252c2e2e332022222e342f35282f266f2220">[email&#160;protected]</span></a>
             </li>
             <li>
               <span class="fc-icon">🕐</span>
@@ -1912,16 +1923,4 @@ a { text-decoration: none; }
         </div>
 
       </div>
-    </div>
-
-    <div class="footer-bottom">
-      <div class="footer-bottom-inner">
-        <p class="footer-copy">© 2025 Broadmoor Accounting &amp; Financials. All rights reserved.</p>
-        <nav class="footer-legal">
-          <a href="#">Privacy Policy</a>
-          <span class="footer-legal-dot"></span>
-          <a href="#">Terms of Service</a>
-          <span class="footer-legal-dot"></span>
-          <a href="#">Cookie Policy</a>
-        </nav>
-   
+    </div
