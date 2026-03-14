@@ -439,6 +439,16 @@ header nav {
   animation: dropIn 0.18s ease;
 }
 
+/* Invisible bridge fills the 8px gap so hover never breaks */
+.nav-menu > li::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  height: 12px;
+}
+
 @keyframes dropIn {
   from { opacity: 0; transform: translateY(-6px); }
   to   { opacity: 1; transform: translateY(0); }
