@@ -1600,7 +1600,7 @@
   </div>
   <div class="footer-bottom">
     <span>© 2026 Bait ul Izzah Quran Academy. All rights reserved. · Last updated <time datetime="2026-10-04">October 2026</time></span>
-    <span>Made with ❤️ for the Ummah</span>
+    <span>Made with ❤️ for the Ummah · We record anonymous visit statistics (country &amp; city only)</span>
   </div>
 </footer>
 
@@ -1666,6 +1666,7 @@ document.addEventListener('click', (e) => {
   const ACADEMY_WA = '923167959923';
   // Google Sheet web-app URL (see google-apps-script/Code.gs). Leave empty to disable saving.
   const SHEET_URL = 'https://script.google.com/macros/s/AKfycbyoabZ0EcLUIvpRCTA5O0hzlfRMJqxM95n3CYY6GGg1thpc-8IgzSEpMy533Lh560c/exec';
+  window.BIZ_SHEET_URL = SHEET_URL;
   const COUNTRIES = ["Afghanistan","Albania","Algeria","Andorra","Angola","Antigua and Barbuda","Argentina","Armenia","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bhutan","Bolivia","Bosnia and Herzegovina","Botswana","Brazil","Brunei","Bulgaria","Burkina Faso","Burundi","Cabo Verde","Cambodia","Cameroon","Canada","Central African Republic","Chad","Chile","China","Colombia","Comoros","Congo (Congo-Brazzaville)","Costa Rica","Côte d'Ivoire","Croatia","Cuba","Cyprus","Czechia","Democratic Republic of the Congo","Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia","Eswatini","Ethiopia","Fiji","Finland","France","Gabon","Gambia","Georgia","Germany","Ghana","Greece","Grenada","Guatemala","Guinea","Guinea-Bissau","Guyana","Haiti","Honduras","Hong Kong","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Italy","Jamaica","Japan","Jordan","Kazakhstan","Kenya","Kiribati","Kosovo","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Marshall Islands","Mauritania","Mauritius","Mexico","Micronesia","Moldova","Monaco","Mongolia","Montenegro","Morocco","Mozambique","Myanmar","Namibia","Nauru","Nepal","Netherlands","New Zealand","Nicaragua","Niger","Nigeria","North Korea","North Macedonia","Norway","Oman","Pakistan","Palau","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Qatar","Romania","Russia","Rwanda","Saint Kitts and Nevis","Saint Lucia","Saint Vincent and the Grenadines","Samoa","San Marino","São Tomé and Príncipe","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","Solomon Islands","Somalia","South Africa","South Korea","South Sudan","Spain","Sri Lanka","Sudan","Suriname","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Timor-Leste","Togo","Tonga","Trinidad and Tobago","Tunisia","Turkey","Turkmenistan","Tuvalu","Uganda","Ukraine","United Arab Emirates","United Kingdom","United States","Uruguay","Uzbekistan","Vanuatu","Vatican City","Venezuela","Vietnam","Yemen","Zambia","Zimbabwe"];
 
   const form = document.getElementById('regForm');
@@ -1951,6 +1952,65 @@ document.querySelectorAll('.yt-lite').forEach(btn => btn.addEventListener('click
   f.allowFullscreen = true;
   btn.replaceWith(f);
 }));
+
+// ===== Anonymous visitor statistics (country / city) → Google Sheet =====
+(function () {
+  const url = window.BIZ_SHEET_URL;
+  if (!url) return;
+  const ua = navigator.userAgent || '';
+  if (navigator.webdriver || /bot|crawl|spider|slurp|lighthouse|headless|preview|facebookexternalhit|whatsapp/i.test(ua)) return;
+  try { if (sessionStorage.getItem('biz_visit_sent')) return; sessionStorage.setItem('biz_visit_sent', '1'); } catch (e) {}
+
+  let visitor = '', returning = false;
+  try {
+    visitor = localStorage.getItem('biz_vid') || '';
+    returning = !!visitor;
+    if (!visitor) { visitor = 'V' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6); localStorage.setItem('biz_vid', visitor); }
+  } catch (e) {}
+
+  function source() {
+    const p = new URLSearchParams(location.search);
+    if (p.get('utm_source')) return p.get('utm_source');
+    const r = document.referrer;
+    if (!r) return 'Direct / WhatsApp';
+    let host = '';
+    try { host = new URL(r).hostname.replace(/^www\./, ''); } catch (e) { return 'Other'; }
+    if (host === location.hostname) return 'Internal';
+    const map = [[/google\./, 'Google'], [/bing\./, 'Bing'], [/yahoo\./, 'Yahoo'], [/duckduckgo/, 'DuckDuckGo'], [/yandex/, 'Yandex'],
+      [/chatgpt|openai/, 'ChatGPT'], [/perplexity/, 'Perplexity'], [/claude\.ai/, 'Claude'], [/gemini/, 'Gemini'], [/copilot/, 'Copilot'],
+      [/facebook|fb\./, 'Facebook'], [/instagram/, 'Instagram'], [/whatsapp|wa\.me/, 'WhatsApp'], [/youtube/, 'YouTube'],
+      [/t\.co|twitter|x\.com/, 'X / Twitter'], [/linkedin/, 'LinkedIn'], [/tiktok/, 'TikTok']];
+    for (const [re, name] of map) if (re.test(host)) return name;
+    return host;
+  }
+  const device = /iPad|Tablet/i.test(ua) ? 'Tablet' : /Mobi|Android|iPhone/i.test(ua) ? 'Mobile' : 'Desktop';
+
+  async function geo() {
+    const get = async (u, ms) => {
+      const c = new AbortController(); const t = setTimeout(() => c.abort(), ms);
+      try { const r = await fetch(u, { signal: c.signal }); return r.ok ? await r.json() : null; } catch (e) { return null; } finally { clearTimeout(t); }
+    };
+    let g = await get('https://get.geojs.io/v1/ip/geo.json', 4000);
+    if (g && g.country) return { country: g.country, region: g.region || '', city: g.city || '' };
+    g = await get('https://ipapi.co/json/', 4000);
+    if (g && g.country_name) return { country: g.country_name, region: g.region || '', city: g.city || '' };
+    return { country: '', region: '', city: '' };
+  }
+
+  async function send() {
+    const loc = await geo();   // visitor's IP is never stored – only country / region / city
+    const body = JSON.stringify({
+      type: 'visit', country: loc.country, region: loc.region, city: loc.city, device, source: source(),
+      referrer: (document.referrer || '').slice(0, 200), lang: navigator.language || '',
+      tz: (Intl.DateTimeFormat().resolvedOptions().timeZone || ''), visitor, returning
+    });
+    let ok = false;
+    try { ok = navigator.sendBeacon && navigator.sendBeacon(url, new Blob([body], { type: 'text/plain;charset=utf-8' })); } catch (e) {}
+    if (!ok) { try { fetch(url, { method: 'POST', mode: 'no-cors', keepalive: true, headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body }); } catch (e) {} }
+  }
+  const start = () => ('requestIdleCallback' in window) ? requestIdleCallback(send, { timeout: 4000 }) : setTimeout(send, 2500);
+  if (document.readyState === 'complete') start(); else window.addEventListener('load', start);
+})();
 </script>
 
 </body></html>
