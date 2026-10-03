@@ -1474,13 +1474,9 @@ document.addEventListener('click', (e) => {
   const val = id => $(id).value.trim();
 
   // ===== Save to Google Sheet (also saves forms that are never submitted) =====
-  const ENTRY_KEY = 'biz_reg_entry_id';
-  let entryId = null;
-  try { entryId = sessionStorage.getItem(ENTRY_KEY); } catch (e) {}
-  if (!entryId) {
-    entryId = 'R' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).slice(2, 6).toUpperCase();
-    try { sessionStorage.setItem(ENTRY_KEY, entryId); } catch (e) {}
-  }
+  // A fresh entry ID on every page load, so each visit gets its own row in the Sheet
+  const newEntryId = () => 'R' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).slice(2, 6).toUpperCase();
+  let entryId = newEntryId();
   let submitted = false, dirty = false, lastSent = '', saveTimer = null;
 
   function collect(status) {
@@ -1580,7 +1576,6 @@ document.addEventListener('click', (e) => {
     submitted = true;
     clearTimeout(saveTimer);
     sendToSheet('Submitted');
-    try { sessionStorage.removeItem(ENTRY_KEY); } catch (e) {}   // next registration gets a fresh row
     const msg = buildMessage();
     const url = 'https://wa.me/' + ACADEMY_WA + '?text=' + encodeURIComponent(msg);
 
