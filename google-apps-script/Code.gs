@@ -26,6 +26,10 @@
  * 9 AM (Pakistan time) you'll get a list of people who started the form in the last 24 hours
  * but didn't submit, with WhatsApp buttons to follow up. Run "sendIncompleteDigest" to test now.
  *
+ * SUBMISSIONS TAB: every submitted registration is also copied, permanently, to the
+ * "Submissions" tab (one row per registration, never overwritten). Run "rebuildSubmissions"
+ * once to copy in registrations that were submitted before this tab existed.
+ *
  * VISITOR TRACKING: the website logs each visit (country, city, device, source – no IP address
  * is stored) to the "Visits" tab. Run "setupVisitDashboard" once to create the
  * "Visitor Dashboard" tab with live totals. The 9 AM daily email also includes a visitor summary.
@@ -131,6 +135,7 @@ function doPost(e) {
       .setBackground(status === 'Submitted' ? '#b7e4c7' : '#fdf3dc');
 
     if (isNewSubmission) {
+      try { recordSubmission_(row); } catch (subErr) { console.error('Submissions copy failed: ' + subErr); }
       try { sendAlert_(row, rowIndex); } catch (mailErr) { console.error('Email alert failed: ' + mailErr); }
     }
 
@@ -219,6 +224,47 @@ function testEmailAlert() {
   sendAlert_(sample, 2);
 }
 
+
+// ===== Submissions tab: permanent record of every submitted registration =====
+const SUBMISSIONS_SHEET = 'Submissions';
+const SUBMISSION_FIELDS = ['submittedAt', 'fullName', 'whatsapp', 'mobile', 'email', 'age', 'marital', 'family', 'relation',
+  'guardianName', 'guardianOccupation', 'country', 'city', 'languages', 'education', 'prevEducation', 'institute', 'id'];
+
+function getSubmissionsSheet_() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  let sh = ss.getSheetByName(SUBMISSIONS_SHEET);
+  if (!sh) sh = ss.insertSheet(SUBMISSIONS_SHEET);
+  if (sh.getLastRow() === 0) {
+    const headers = ['#'].concat(SUBMISSION_FIELDS.map(k => k === 'submittedAt' ? 'Submitted At' : COLUMNS[colIdx_(k)][1]));
+    sh.appendRow(headers);
+    sh.getRange(1, 1, 1, headers.length).setFontWeight('bold').setBackground('#b7e4c7');
+    sh.setFrozenRows(1);
+  }
+  return sh;
+}
+
+function recordSubmission_(row) {
+  const sh = getSubmissionsSheet_();
+  const n = sh.getLastRow();   // header row counts as 1, so this is the next serial number
+  const values = SUBMISSION_FIELDS.map(k => {
+    const v = row[colIdx_(k)];
+    return (k === 'whatsapp' || k === 'mobile') && v && String(v).charAt(0) !== "'" ? "'" + v : v;
+  });
+  sh.appendRow([n].concat(values));
+}
+
+// Run once to copy registrations submitted before the Submissions tab existed (skips ones already copied).
+function rebuildSubmissions() {
+  const reg = getSheet_();
+  const sub = getSubmissionsSheet_();
+  const idCol = SUBMISSION_FIELDS.length + 1;   // Entry ID is the last column
+  const have = sub.getLastRow() > 1 ? sub.getRange(2, idCol, sub.getLastRow() - 1, 1).getValues().map(r => String(r[0])) : [];
+  if (reg.getLastRow() < 2) return;
+  const rows = reg.getRange(2, 1, reg.getLastRow() - 1, COLUMNS.length).getValues()
+    .filter(r => r[colIdx_('status')] === 'Submitted' && have.indexOf(String(r[colIdx_('id')])) === -1)
+    .sort((a, b) => new Date(a[colIdx_('submittedAt')]) - new Date(b[colIdx_('submittedAt')]));
+  rows.forEach(recordSubmission_);
+}
 
 // ===== Visitor tracking =====
 const VISITS_SHEET = 'Visits';
