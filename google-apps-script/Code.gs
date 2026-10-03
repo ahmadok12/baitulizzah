@@ -21,6 +21,10 @@
  *
  * EMAIL ALERTS: run the function "testEmailAlert" once from the editor (select it in the
  * toolbar → Run) to grant the "send email" permission and receive a sample alert.
+ *
+ * DAILY INCOMPLETE-FORMS EMAIL: run "setupDailyDigest" once from the editor. Every morning at
+ * 9 AM (Pakistan time) you'll get a list of people who started the form in the last 24 hours
+ * but didn't submit, with WhatsApp buttons to follow up. Run "sendIncompleteDigest" to test now.
  */
 
 const SHEET_NAME = 'Registrations';
@@ -154,8 +158,8 @@ function sendAlert_(row, rowIndex) {
   const relation = get('relation') === '-' ? 'Guardian' : get('relation');
   const fields = [
     ['Full Name', get('fullName')],
-    ['Mobile Number', get('mobile')],
     ['WhatsApp Number', get('whatsapp')],
+    ['Mobile Number', get('mobile')],
     ['Age', get('age') === '-' ? '-' : get('age') + ' Years'],
     ['Marital Status', get('marital')],
     ['Family Members', get('family')],
@@ -193,7 +197,7 @@ function sendAlert_(row, rowIndex) {
 
   MailApp.sendEmail({
     to: ALERT_EMAIL,
-    subject: 'New Registration: ' + get('fullName') + ' (' + get('mobile') + ')',
+    subject: 'New Registration: ' + get('fullName') + ' (' + (get('whatsapp') !== '-' ? get('whatsapp') : get('mobile')) + ')',
     body: plain,
     htmlBody: html,
     name: 'Bait ul Izzah Website'
@@ -208,4 +212,63 @@ function testEmailAlert() {
   set('age', 25); set('relation', 'Father'); set('guardianName', 'Sample Father');
   set('country', 'Pakistan'); set('city', 'Okara'); set('languages', 'Urdu, English');
   sendAlert_(sample, 2);
+}
+
+// ===== Daily email: forms started but not submitted =====
+function sendIncompleteDigest() {
+  const sh = getSheet_();
+  const last = sh.getLastRow();
+  if (last < 2) return;
+  const rows = sh.getRange(2, 1, last - 1, COLUMNS.length).getValues();
+  const since = new Date(Date.now() - 24 * 60 * 60 * 1000);
+  const clean = v => (v === '' || v === null || v === undefined) ? '' : String(v).replace(/^'/, '');
+  const pending = rows
+    .map((r, i) => ({ r, row: i + 2 }))
+    .filter(({ r }) => r[colIdx_('status')] !== 'Submitted' && r[colIdx_('lastUpdated')] instanceof Date && r[colIdx_('lastUpdated')] >= since);
+  if (!pending.length) return;   // nothing to follow up – no email
+
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const ssUrl = SpreadsheetApp.getActiveSpreadsheet().getUrl() + '#gid=' + sh.getSheetId();
+  const tz = 'Asia/Karachi';
+  const rowsHtml = pending.map(({ r, row }, i) => {
+    const phone = clean(r[colIdx_('whatsapp')]) || clean(r[colIdx_('mobile')]);
+    const digits = phone.replace(/\D/g, '').replace(/^0/, '92');
+    const name = clean(r[colIdx_('fullName')]) || '(no name)';
+    const place = [clean(r[colIdx_('city')]), clean(r[colIdx_('country')])].filter(Boolean).join(', ');
+    const when = Utilities.formatDate(r[colIdx_('lastUpdated')], tz, 'd MMM, h:mm a');
+    return '<tr style="background:' + (i % 2 ? '#fff' : '#f6faf6') + '">' +
+      '<td style="padding:8px 10px;border-bottom:1px solid #e5eee5"><b>' + esc(name) + '</b>' + (place ? '<br><span style="color:#6b6b5a;font-size:12px">' + esc(place) + '</span>' : '') + '</td>' +
+      '<td style="padding:8px 10px;border-bottom:1px solid #e5eee5">' + (esc(phone) || '-') + '</td>' +
+      '<td style="padding:8px 10px;border-bottom:1px solid #e5eee5;color:#6b6b5a;font-size:12px">' + esc(when) + '</td>' +
+      '<td style="padding:8px 10px;border-bottom:1px solid #e5eee5">' +
+        (digits.length >= 10 ? '<a href="https://wa.me/' + digits + '" style="background:#25D366;color:#fff;padding:6px 12px;border-radius:14px;text-decoration:none;font-weight:bold;font-size:12px">WhatsApp</a>' : '<span style="color:#999;font-size:12px">no number</span>') +
+        ' <a href="' + ssUrl + '&range=A' + row + '" style="color:#2d6a4f;font-size:12px">row ' + row + '</a></td></tr>';
+  }).join('');
+
+  const html = '<div style="font-family:Arial,sans-serif;max-width:640px;color:#1a2e1a">' +
+    '<h2 style="color:#2d6a4f;margin:0 0 4px">' + pending.length + ' incomplete registration' + (pending.length > 1 ? 's' : '') + '</h2>' +
+    '<p style="margin:0 0 14px;color:#6b6b5a">Started on the website in the last 24 hours but not submitted. A quick WhatsApp message can help them finish.</p>' +
+    '<table style="border-collapse:collapse;width:100%;font-size:14px"><tr style="background:#2d6a4f;color:#fff">' +
+    '<th align="left" style="padding:8px 10px">Name</th><th align="left" style="padding:8px 10px">Number</th><th align="left" style="padding:8px 10px">Last activity</th><th align="left" style="padding:8px 10px">Follow up</th></tr>' +
+    rowsHtml + '</table>' +
+    '<p style="margin:16px 0 0"><a href="' + ssUrl + '" style="color:#2d6a4f;font-weight:bold">Open the Registrations sheet →</a></p></div>';
+
+  const plain = pending.map(({ r }) => (clean(r[colIdx_('fullName')]) || '(no name)') + ' – ' +
+    (clean(r[colIdx_('whatsapp')]) || clean(r[colIdx_('mobile')]) || 'no number')).join('\n');
+
+  MailApp.sendEmail({
+    to: ALERT_EMAIL,
+    subject: 'Daily follow-up: ' + pending.length + ' incomplete registration' + (pending.length > 1 ? 's' : ''),
+    body: 'Incomplete registrations (last 24 hours):\n\n' + plain + '\n\nSheet: ' + ssUrl,
+    htmlBody: html,
+    name: 'Bait ul Izzah Website'
+  });
+}
+
+// Run once: schedules sendIncompleteDigest every day at 9 AM Pakistan time (safe to run again).
+function setupDailyDigest() {
+  ScriptApp.getProjectTriggers()
+    .filter(t => t.getHandlerFunction() === 'sendIncompleteDigest')
+    .forEach(t => ScriptApp.deleteTrigger(t));
+  ScriptApp.newTrigger('sendIncompleteDigest').timeBased().everyDays(1).atHour(9).inTimezone('Asia/Karachi').create();
 }
