@@ -470,11 +470,11 @@
   .course-medal svg { position: absolute; inset: 0; width: 100%; height: 100%; transition: transform 0.8s cubic-bezier(.2,.8,.2,1); }
   .course-card:hover .course-medal svg { transform: rotate(45deg); }
   .course-ar {
-    position: relative; font-family: 'Aref Ruqaa', 'Amiri', serif; direction: rtl;
-    font-size: 1.55rem; line-height: 1.2; color: #fdf3dc; font-weight: 700;
+    position: relative; font-family: 'Amiri', 'Noto Naskh Arabic', serif; direction: rtl;
+    font-size: 1.6rem; line-height: 1.35; color: #fffaf0; font-weight: 700; letter-spacing: 0;
     text-shadow: 0 1px 6px rgba(0,0,0,0.35); max-width: 78px; text-align: center;
   }
-  .course-ar.sm { font-size: 1.15rem; }
+  .course-ar.sm { font-size: 1.22rem; line-height: 1.25; }
   .course-title { font-family: 'Amiri', serif; font-size: 1.22rem; font-weight: 700; color: var(--dark); line-height: 1.3; margin-bottom: 0.5rem; }
   .course-desc { font-size: 0.84rem; color: var(--text-light); line-height: 1.65; flex: 1; }
   .course-tag {
@@ -534,75 +534,113 @@
   .qual-text { font-size: 0.83rem; color: rgba(255,255,255,0.85); }
   .qual-inst { font-size: 0.73rem; color: var(--gold-light); font-weight: 600; }
 
-  /* WHY */
-  .why { background: var(--warm-white); }
-  .why-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
-  .why-card {
-    padding: 2rem;
-    border-radius: 20px;
-    border: 1px solid var(--border);
-    background: linear-gradient(135deg, #fff 0%, var(--gold-pale) 100%);
-    transition: transform 0.25s;
-  }
-  .why-card:hover { transform: translateY(-4px); }
-  .why-icon { font-size: 2.2rem; margin-bottom: 1rem; }
-  .why-title { font-weight: 700; color: var(--dark); margin-bottom: 0.4rem; }
-  .why-desc { font-size: 0.85rem; color: var(--text-light); }
+  /* WHY – illuminated-manuscript panels on ivory */
+  .why { position: relative; background: linear-gradient(180deg, #fffaf0 0%, #f7eedb 100%); overflow: hidden; }
+  .why::before { content: ''; position: absolute; inset: 0; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%23c9a84c' stroke-width='0.8' opacity='0.22'%3E%3Cpath d='M32 0v64M0 32h64M0 0l64 64M64 0L0 64'/%3E%3Crect x='20' y='20' width='24' height='24' transform='rotate(45 32 32)'/%3E%3Ccircle cx='32' cy='32' r='8'/%3E%3C/g%3E%3C/svg%3E"); background-size: 64px 64px; pointer-events: none;
+    -webkit-mask-image: radial-gradient(ellipse at center, transparent 30%, #000 85%); mask-image: radial-gradient(ellipse at center, transparent 30%, #000 85%); }
+  .why > * { position: relative; }
+  .sec-head { text-align: center; margin-bottom: 3.25rem; }
+  .sec-head .section-eyebrow { justify-content: center; }
+  .sec-head .section-title { text-align: center; margin-bottom: 0.6rem; }
+  .sec-ar { font-family: 'Amiri', serif; direction: rtl; font-size: clamp(1.5rem, 3vw, 2rem); color: var(--gold); line-height: 1.4; margin-bottom: 0.25rem; }
+  .sec-orn { display: flex; align-items: center; justify-content: center; gap: 0.6rem; color: var(--gold); font-size: 0.7rem; }
+  .sec-orn::before, .sec-orn::after { content: ''; width: 60px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold)); }
+  .sec-orn::after { transform: scaleX(-1); }
 
-  /* REVIEWS */
-  .reviews { background: var(--cream); }
-  .reviews-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 3rem; }
+  .why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.6rem; max-width: 1180px; margin: 0 auto; }
+  .why-card {
+    position: relative; overflow: hidden;
+    padding: 2rem 1.75rem 1.9rem;
+    background: #fff;
+    border: 1px solid rgba(201,168,76,0.35);
+    border-radius: 6px;
+    box-shadow: 0 10px 30px rgba(120,95,30,0.08);
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  /* gilded corner ornaments */
+  .why-card::before, .why-card::after {
+    content: ''; position: absolute; width: 26px; height: 26px; border: 2px solid var(--gold); pointer-events: none; transition: width .3s, height .3s;
+  }
+  .why-card::before { top: 8px; left: 8px; border-right: none; border-bottom: none; }
+  .why-card::after  { bottom: 8px; right: 8px; border-left: none; border-top: none; }
+  .why-card:hover { transform: translateY(-5px); box-shadow: 0 18px 44px rgba(120,95,30,0.16); }
+  .why-card:hover::before, .why-card:hover::after { width: 42px; height: 42px; }
+  .why-wm {
+    position: absolute; right: -6px; bottom: -18px; font-family: 'Amiri', serif; direction: rtl;
+    font-size: 4.6rem; font-weight: 700; line-height: 1; color: var(--soft-green); opacity: 0.06; pointer-events: none; white-space: nowrap;
+  }
+  .why-icon {
+    width: 58px; height: 58px; margin-bottom: 1.15rem;
+    display: grid; place-items: center; color: var(--gold-light);
+    background: linear-gradient(135deg, var(--mid-green), var(--soft-green) 60%, #1b4d36);
+    clip-path: polygon(29.3% 0, 70.7% 0, 100% 29.3%, 100% 70.7%, 70.7% 100%, 29.3% 100%, 0 70.7%, 0 29.3%);   /* octagon */
+    font-size: 0;
+  }
+  .why-icon svg { width: 28px; height: 28px; }
+  .why-title { font-family: 'Amiri', serif; font-size: 1.22rem; font-weight: 700; color: var(--dark); margin-bottom: 0.35rem; line-height: 1.3; }
+  .why-desc { font-size: 0.86rem; color: var(--text-light); line-height: 1.7; position: relative; }
+
+  /* REVIEWS – soft green with star lattice, scroll-style cards */
+  .reviews { position: relative; background: linear-gradient(160deg, #eef7ef 0%, var(--pale-green) 55%, #e6f1e4 100%); overflow: hidden; }
+  .reviews::before { content: ''; position: absolute; inset: 0; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56'%3E%3Cpath d='M28 6l6.4 15.6L50 28l-15.6 6.4L28 50l-6.4-15.6L6 28l15.6-6.4z' fill='none' stroke='%232d6a4f' stroke-width='0.8' opacity='0.12'/%3E%3C/svg%3E"); background-size: 56px 56px; pointer-events: none; }
+  .reviews > * { position: relative; }
+  .reviews .sec-ar { color: var(--soft-green); }
+  .reviews-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin: 0 auto 3.5rem; max-width: 1100px; }
   .review-card {
-    background: #fff;
-    border-radius: 20px;
-    padding: 2rem;
-    border: 1px solid var(--border);
     position: relative;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    background: #fffdf8;
+    border-radius: 18px;
+    padding: 2.6rem 2rem 1.8rem;
+    box-shadow: 0 14px 40px rgba(27,77,54,0.12);
+    border: 1px solid rgba(45,106,79,0.15);
+    display: flex; flex-direction: column;
   }
-  .review-card::before {
-    content: '❝';
-    position: absolute;
-    top: -0.5rem; left: 1.5rem;
-    font-size: 4rem;
-    color: var(--soft-green);
-    opacity: 0.15;
-    font-family: Georgia, serif;
-    line-height: 1;
+  .review-card::before {   /* geometric band across the top */
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 10px; border-radius: 18px 18px 0 0;
+    background:
+      repeating-linear-gradient(45deg, var(--gold) 0 4px, transparent 4px 8px),
+      linear-gradient(90deg, var(--soft-green), #1b4d36);
+    opacity: 0.95;
   }
-  .review-stars { color: var(--gold); font-size: 1.1rem; margin-bottom: 0.75rem; }
-  .review-text { font-size: 0.88rem; color: var(--text); font-style: italic; margin-bottom: 1.25rem; line-height: 1.8; }
-  .review-author { display: flex; align-items: center; gap: 0.75rem; }
+  .review-quote {
+    position: absolute; top: 1.1rem; right: 1.5rem; width: 54px; height: 54px; color: var(--gold); opacity: 0.35;
+  }
+  .review-stars { color: var(--gold); font-size: 1.05rem; letter-spacing: 0.2em; margin-bottom: 0.9rem; }
+  .review-text { font-size: 0.92rem; color: var(--text); font-style: normal; margin-bottom: 1.5rem; line-height: 1.85; flex: 1; }
+  .review-author { display: flex; align-items: center; gap: 0.9rem; padding-top: 1.1rem; border-top: 1px dashed rgba(201,168,76,0.5); }
   .review-avatar {
-    width: 42px; height: 42px; border-radius: 50%;
-    background: var(--soft-green);
-    color: #fff;
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Amiri', serif;
-    font-size: 1.1rem;
-    font-weight: 700;
-    flex-shrink: 0;
+    width: 50px; height: 50px; flex-shrink: 0;
+    display: grid; place-items: center;
+    background: linear-gradient(135deg, var(--gold-light), var(--gold));
+    color: #143d2c; font-family: 'Amiri', serif; font-size: 1.35rem; font-weight: 700;
+    clip-path: polygon(50% 0, 64% 15%, 85% 15%, 85% 36%, 100% 50%, 85% 64%, 85% 85%, 64% 85%, 50% 100%, 36% 85%, 15% 85%, 15% 64%, 0 50%, 15% 36%, 15% 15%, 36% 15%);
   }
-  .review-name { font-weight: 700; font-size: 0.9rem; color: var(--dark); }
-  .review-loc { font-size: 0.75rem; color: var(--text-light); }
-  .videos-title { font-family: 'Amiri', serif; font-size: 1.4rem; color: var(--dark); margin-bottom: 1.25rem; }
-  .videos-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .review-name { font-family: 'Amiri', serif; font-weight: 700; font-size: 1.1rem; color: var(--dark); line-height: 1.2; }
+  .review-loc { font-size: 0.78rem; color: var(--text-light); }
+  .videos-title {
+    font-family: 'Amiri', serif; font-size: 1.5rem; color: var(--dark); margin-bottom: 1.4rem; text-align: center;
+    display: flex; align-items: center; justify-content: center; gap: 0.8rem;
+  }
+  .videos-title::before, .videos-title::after { content: '✦'; color: var(--gold); font-size: 0.8rem; }
+  .videos-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; max-width: 1100px; margin: 0 auto; }
   .video-card {
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.1);
-    border: 1px solid var(--border);
+    border-radius: 16px; overflow: hidden; background: #143d2c; padding: 8px;
+    box-shadow: 0 14px 40px rgba(27,77,54,0.2);
+    outline: 1px solid rgba(201,168,76,0.6); outline-offset: -4px;
   }
-  .video-card iframe { width: 100%; height: 315px; display: block; border: none; }
+  .video-card iframe { width: 100%; height: 315px; display: block; border: none; border-radius: 10px; }
   .video-label {
-    padding: 0.75rem 1rem;
-    background: #fff;
-    font-size: 0.82rem;
-    font-weight: 600;
-    color: var(--text-light);
-    display: flex; align-items: center; gap: 0.5rem;
+    padding: 0.7rem 0.5rem 0.3rem;
+    font-size: 0.85rem; font-weight: 700; color: var(--gold-light);
+    display: flex; align-items: center; gap: 0.55rem;
   }
-  .video-label::before { content: '▶'; color: var(--soft-green); }
+  .video-label::before { content: '▶'; color: #143d2c; background: var(--gold-light); width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-size: 0.6rem; }
+  @media (max-width: 900px) { .why-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 600px) {
+    .why-grid { grid-template-columns: 1fr; }
+    .review-card { padding: 2.4rem 1.4rem 1.6rem; }
+    .video-card iframe { height: 200px; }
+  }
 
   /* CONTACT */
   .contact { background: linear-gradient(160deg, var(--pale-green) 0%, var(--cream) 100%); text-align: center; }
@@ -1083,38 +1121,46 @@
 
 <!-- WHY CHOOSE US -->
 <section class="why" id="why">
-  <div style="text-align:center; margin-bottom:3rem;" class="fade-in">
-    <div class="section-eyebrow" style="justify-content:center;">Our Promise</div>
-    <h2 class="section-title" style="text-align:center;">Why <em>Choose</em> Us?</h2>
+  <div class="sec-head fade-in">
+    <div class="sec-ar" lang="ar">لِمَاذَا تَخْتَارُنَا؟</div>
+    <div class="section-eyebrow">Our Promise</div>
+    <h2 class="section-title">Why <em>Choose</em> Us?</h2>
+    <div class="sec-orn">✦</div>
   </div>
   <div class="why-grid">
-    <div class="why-card fade-in" style="transition-delay: 0s;">
-      <div class="why-icon">🕌</div>
+    <div class="why-card fade-in">
+      <span class="why-wm" lang="ar" aria-hidden="true">أَمَان</span>
+      <div class="why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M6 21v-7a6 6 0 0 1 12 0v7M12 8V4.5M12 4.5a1.4 1.4 0 0 0 1.4-1.4A1.9 1.9 0 1 1 12 4.5zM10.3 21v-3a1.7 1.7 0 0 1 3.4 0v3"/></svg></div>
       <div class="why-title">Female-Friendly Environment</div>
       <div class="why-desc">A safe, comfortable, and respectful learning space created exclusively with women and girls in mind.</div>
     </div>
-    <div class="why-card fade-in" style="transition-delay: 0.08s;">
-      <div class="why-icon">👁️</div>
+    <div class="why-card fade-in">
+      <span class="why-wm" lang="ar" aria-hidden="true">عِنَايَة</span>
+      <div class="why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 20a6 6 0 0 1 12 0"/><circle cx="17.3" cy="9.2" r="2.4"/><path d="M16 14.3a4.8 4.8 0 0 1 5.2 5.2"/></svg></div>
       <div class="why-title">One-to-One Attention</div>
       <div class="why-desc">Every student gets dedicated, personalized teaching — not lost in a group. Your pace. Your progress.</div>
     </div>
-    <div class="why-card fade-in" style="transition-delay: 0.16s;">
-      <div class="why-icon">🕐</div>
+    <div class="why-card fade-in">
+      <span class="why-wm" lang="ar" aria-hidden="true">وَقْت</span>
+      <div class="why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg></div>
       <div class="why-title">Flexible Timings</div>
       <div class="why-desc">Schedule classes around your life. Morning, evening, or weekend — we accommodate all time zones.</div>
     </div>
-    <div class="why-card fade-in" style="transition-delay: 0.24s;">
-      <div class="why-icon">✨</div>
+    <div class="why-card fade-in">
+      <span class="why-wm" lang="ar" aria-hidden="true">فَرَح</span>
+      <div class="why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 3l1.9 5 5 1.9-5 1.9-1.9 5-1.9-5-5-1.9 5-1.9z"/><path d="M18.5 14.5l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/></svg></div>
       <div class="why-title">Interactive for Kids</div>
       <div class="why-desc">Engaging, story-based lessons with Prophet-inspired examples that spark curiosity and love for learning.</div>
     </div>
-    <div class="why-card fade-in" style="transition-delay: 0.32s;">
-      <div class="why-icon">💡</div>
+    <div class="why-card fade-in">
+      <span class="why-wm" lang="ar" aria-hidden="true">فَهْم</span>
+      <div class="why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5.5A1.5 1.5 0 0 1 4.5 4H9a3 3 0 0 1 3 3v13a2.5 2.5 0 0 0-2.5-2.5H3z"/><path d="M21 5.5A1.5 1.5 0 0 0 19.5 4H15a3 3 0 0 0-3 3v13a2.5 2.5 0 0 1 2.5-2.5H21z"/></svg></div>
       <div class="why-title">Deep Quranic Understanding</div>
       <div class="why-desc">Beyond recitation — we teach the meaning, application, and wisdom of the Quran in daily life.</div>
     </div>
-    <div class="why-card fade-in" style="transition-delay: 0.4s;">
-      <div class="why-icon">🌍</div>
+    <div class="why-card fade-in">
+      <span class="why-wm" lang="ar" aria-hidden="true">عَالَم</span>
+      <div class="why-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3.5 9h17M3.5 15h17"/></svg></div>
       <div class="why-title">Students from Around the World</div>
       <div class="why-desc">Serving students in Pakistan, Gulf countries, UK, USA, Canada, and beyond via Zoom.</div>
     </div>
@@ -1123,12 +1169,15 @@
 
 <!-- REVIEWS -->
 <section class="reviews" id="reviews">
-  <div style="text-align:center; margin-bottom:3rem;" class="fade-in">
-    <div class="section-eyebrow" style="justify-content:center;">Testimonials</div>
-    <h2 class="section-title" style="text-align:center;">What Our <em>Students</em> Say</h2>
+  <div class="sec-head fade-in">
+    <div class="sec-ar" lang="ar">جَزَاكُمُ اللّٰهُ خَيْرًا</div>
+    <div class="section-eyebrow">Testimonials</div>
+    <h2 class="section-title">What Our <em>Students</em> Say</h2>
+    <div class="sec-orn">✦</div>
   </div>
   <div class="reviews-grid">
     <div class="review-card fade-in" style="transition-delay: 0s;">
+      <svg class="review-quote" viewBox="0 0 48 48" fill="currentColor" aria-hidden="true"><path d="M20 12C11 14 6 20 6 28v8h14V22h-7c0-4 3-6 7-7zM42 12c-9 2-14 8-14 16v8h14V22h-7c0-4 3-6 7-7z"/></svg>
       <div class="review-stars">★★★★★</div>
       <p class="review-text">"I am deeply grateful to Miss Izzah for her sincere and patient guidance in my Alimah course. Thanks to her structured teaching, I can now read, understand, and follow lectures entirely in Arabic. Her clarity in Quranic grammar was a game-changer for my studies. As I reach my 4th senior level, I pray Allah accepts her efforts as Sadaqah Jariyah. Ameen."</p>
       <div class="review-author">
@@ -1140,6 +1189,7 @@
       </div>
     </div>
     <div class="review-card fade-in" style="transition-delay: 0.08s;">
+      <svg class="review-quote" viewBox="0 0 48 48" fill="currentColor" aria-hidden="true"><path d="M20 12C11 14 6 20 6 28v8h14V22h-7c0-4 3-6 7-7zM42 12c-9 2-14 8-14 16v8h14V22h-7c0-4 3-6 7-7z"/></svg>
       <div class="review-stars">★★★★★</div>
       <p class="review-text">"My first experience with online Quran classes has been amazing. Each interactive session is enriched with Prophet-inspired life lessons and stories that make learning truly 'flavorful.' I am deeply grateful for such a humble, accommodating teacher who helps me grow both in knowledge and character every day. Alhamdulillah!"</p>
       <div class="review-author">
@@ -1153,7 +1203,7 @@
   </div>
 
   <div class="fade-in">
-    <div class="videos-title">🎬 Video Reviews from Our Students</div>
+    <div class="videos-title">Video Reviews from Our Students</div>
     <div class="videos-grid">
       <div class="video-card">
         <iframe src="https://www.youtube.com/embed/q441H1crxFk" title="Student Review – Ahmed, Dubai UAE" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="">
