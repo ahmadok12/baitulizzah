@@ -570,6 +570,10 @@
     color: var(--dark);
   }
   .contact-wa-box .wa-icon { font-size: 1.8rem; }
+  a.contact-wa-box { text-decoration: none; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s; }
+  a.contact-wa-box:hover { transform: translateY(-2px); border-color: #25D366; box-shadow: 0 10px 34px rgba(37,211,102,0.25); color: var(--soft-green); }
+  .wa-float { transition: transform 0.25s, opacity 0.25s; }
+  .wa-float.hide { opacity: 0; pointer-events: none; transform: scale(0.6); }
   .contact-btns { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
 
 
@@ -634,6 +638,15 @@
   .combo-list li { padding: 0.55rem 0.75rem; border-radius: 8px; cursor: pointer; font-size: 0.92rem; }
   .combo-list li.active, .combo-list li:hover { background: var(--pale-green); color: var(--soft-green); }
   .combo-list li.selected { font-weight: 700; }
+  .multi-box { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem; cursor: text; padding-top: 0.5rem; padding-bottom: 0.5rem; min-height: 48px; }
+  .multi-box:focus-within { border-color: var(--mid-green); background-color: #fff; box-shadow: 0 0 0 3px rgba(64,145,108,0.15); }
+  .multi-chips { display: contents; }
+  .multi-box input { flex: 1; min-width: 120px; border: none; background: transparent; font: inherit; font-size: 0.95rem; color: var(--text); padding: 0.25rem 0; outline: none; }
+  .chip { display: inline-flex; align-items: center; gap: 0.35rem; background: var(--pale-green); color: var(--soft-green); border: 1px solid var(--light-green); border-radius: 50px; padding: 0.2rem 0.4rem 0.2rem 0.75rem; font-size: 0.85rem; font-weight: 700; }
+  .chip button { border: none; background: rgba(45,106,79,0.12); color: var(--soft-green); width: 20px; height: 20px; border-radius: 50%; cursor: pointer; font-size: 0.85rem; line-height: 1; display: inline-flex; align-items: center; justify-content: center; padding: 0; }
+  .combo.multi li[data-i] { display: flex; align-items: center; gap: 0.6rem; }
+  .combo.multi li[data-i]::before { content: ''; width: 16px; height: 16px; border: 1.5px solid var(--mid-green); border-radius: 4px; flex-shrink: 0; background: #fff; }
+  .combo.multi li.checked::before { content: '✓'; background: var(--soft-green); color: #fff; font-size: 0.7rem; display: flex; align-items: center; justify-content: center; font-weight: 800; }
   .combo-list li.empty { color: var(--text-light); cursor: default; background: none; }
 
   .reg-actions { margin-top: 1.75rem; display: flex; flex-direction: column; align-items: center; gap: 0.75rem; text-align: center; }
@@ -1087,10 +1100,10 @@
     <h2 class="section-title">Ready to Begin <em>Learning?</em></h2>
     <p class="contact-sub">Start your Quranic journey today. Reach out via WhatsApp for a free trial class or register directly.</p>
     <div style="display:flex; justify-content:center; margin-bottom:2rem;">
-      <div class="contact-wa-box">
+      <a class="contact-wa-box" href="https://wa.me/923167959923" target="_blank" rel="noopener" title="Chat on WhatsApp">
         <span class="wa-icon">📱</span>
         <span>+92 316 7959923</span>
-      </div>
+      </a>
     </div>
     <div class="contact-btns">
       <a href="https://wa.me/923167959923" target="_blank" class="btn-wa">
@@ -1179,6 +1192,18 @@
       <div class="reg-field">
         <label for="rCity">City</label>
         <input class="reg-input" type="text" id="rCity" name="city" autocomplete="address-level2" placeholder="Enter your city">
+      </div>
+
+      <div class="reg-field full">
+        <label for="rLangSearch">Languages You Can Understand</label>
+        <div class="combo multi" id="langCombo">
+          <div class="multi-box reg-input reg-select" id="langBox">
+            <span class="multi-chips" id="langChips"></span>
+            <input type="text" id="rLangSearch" placeholder="Search &amp; select languages" autocomplete="off"
+                   role="combobox" aria-expanded="false" aria-controls="langList" aria-autocomplete="list">
+          </div>
+          <ul class="combo-list" id="langList" role="listbox" aria-multiselectable="true"></ul>
+        </div>
       </div>
 
       <div class="reg-field full">
@@ -1393,6 +1418,52 @@ document.addEventListener('click', (e) => {
     if (exact) { chosen = exact; cInput.value = exact; }
   });
 
+  // --- Languages: searchable multi-select ---
+  const LANGS = ['English', 'Urdu', 'Hindi', 'Arabic'];
+  const langCombo = $('langCombo'), langBox = $('langBox'), langInput = $('rLangSearch'),
+        langList = $('langList'), langChips = $('langChips');
+  const langSel = [];
+  let langMatches = [], langActive = -1;
+  function langRender() {
+    const s = langInput.value.trim().toLowerCase();
+    langMatches = LANGS.filter(l => l.toLowerCase().includes(s));
+    if (langActive >= langMatches.length) langActive = langMatches.length - 1;
+    if (langActive < 0 && langMatches.length) langActive = 0;
+    langList.innerHTML = langMatches.length
+      ? langMatches.map((l, i) => `<li role="option" data-i="${i}" aria-selected="${langSel.includes(l)}" class="${langSel.includes(l) ? 'checked' : ''}${i === langActive ? ' active' : ''}">${l}</li>`).join('')
+      : '<li class="empty">No language found</li>';
+    langChips.innerHTML = langSel.map(l => `<span class="chip">${l}<button type="button" data-rm="${l}" aria-label="Remove ${l}">×</button></span>`).join('');
+    langInput.placeholder = langSel.length ? '' : 'Search & select languages';
+  }
+  function langOpen() { langRender(); langCombo.classList.add('open'); langInput.setAttribute('aria-expanded', 'true'); }
+  function langClose() { langCombo.classList.remove('open'); langInput.setAttribute('aria-expanded', 'false'); }
+  function langToggle(l) {
+    const i = langSel.indexOf(l);
+    if (i > -1) langSel.splice(i, 1); else langSel.push(l);
+    langSel.sort((a, b) => LANGS.indexOf(a) - LANGS.indexOf(b));
+    langInput.value = ''; langRender();
+  }
+  langBox.addEventListener('mousedown', e => {
+    const rm = e.target.closest('[data-rm]');
+    if (rm) { e.preventDefault(); langToggle(rm.dataset.rm); return; }
+    if (e.target !== langInput) { e.preventDefault(); langInput.focus(); langOpen(); }
+  });
+  langInput.addEventListener('focus', langOpen);
+  langInput.addEventListener('input', () => { langActive = 0; langOpen(); });
+  langInput.addEventListener('keydown', e => {
+    if (e.key === 'ArrowDown') { e.preventDefault(); langActive = Math.min(langActive + 1, langMatches.length - 1); langOpen(); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); langActive = Math.max(langActive - 1, 0); langOpen(); }
+    else if (e.key === 'Enter') { e.preventDefault(); if (langMatches[langActive]) langToggle(langMatches[langActive]); }
+    else if (e.key === 'Backspace' && !langInput.value && langSel.length) langToggle(langSel[langSel.length - 1]);
+    else if (e.key === 'Escape') langClose();
+  });
+  langList.addEventListener('mousedown', e => {
+    const li = e.target.closest('li[data-i]');
+    if (li) { e.preventDefault(); langToggle(langMatches[+li.dataset.i]); }
+  });
+  langInput.addEventListener('blur', () => setTimeout(() => { langClose(); langInput.value = ''; langRender(); }, 120));
+  langRender();
+
   // --- Validation helpers ---
   function setErr(el) { el.classList.add('invalid'); el.closest('.reg-field').classList.add('has-err'); }
   function clearErr(el) { el.classList.remove('invalid'); el.closest('.reg-field').classList.remove('has-err'); }
@@ -1416,6 +1487,7 @@ document.addEventListener('click', (e) => {
       '*Country:* ' + (val('rCountry') || '-'),
       '*City:* ' + (val('rCity') || '-'),
       '*Education:* ' + (val('rEducation') || '-'),
+      '*Languages:* ' + (langSel.length ? langSel.join(', ') : '-'),
       '*Previous Islamic Education:* ' + (prev ? prev.value : '-')
     ];
     if (prev && prev.value === 'Yes') lines.push('*Institute:* ' + (val('rInstitute') || '-'));
@@ -1454,13 +1526,34 @@ document.addEventListener('click', (e) => {
     $('regDone').classList.add('show');
     form.dataset.msg = msg;
 
-    let opened = null;
-    try { opened = window.open(url, '_blank'); if (opened) opened.opener = null; } catch (err) { opened = null; }
-    // Popup blocked or failed → open WhatsApp in the same tab instead
-    if (!opened) {
-      try { window.location.href = url; } catch (err) { /* fallback panel stays visible */ }
-    }
+    $('regDone').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    openWhatsApp(url);
   });
+
+  // Open WhatsApp as reliably as possible across phones, desktops and in-app browsers
+  function openWhatsApp(url) {
+    const isMobile = /Android|iPhone|iPad|iPod|Mobile|Opera Mini|IEMobile/i.test(navigator.userAgent);
+    if (isMobile) {
+      // Phones: same-tab navigation hands off straight to the WhatsApp app (no popup to block)
+      try { window.top.location.href = url; return; } catch (e) {}
+      try { window.location.href = url; return; } catch (e) {}
+    } else {
+      // Desktop: new tab with WhatsApp Web; if blocked, use the current tab
+      let w = null;
+      try { w = window.open(url, '_blank'); } catch (e) { w = null; }
+      if (w) { try { w.opener = null; } catch (e) {} return; }
+      try { window.top.location.href = url; return; } catch (e) {}
+      try { window.location.href = url; } catch (e) {}
+    }
+    // If everything above was blocked, the "Send on WhatsApp" / "Copy Details" panel stays visible
+  }
+
+  // Hide the floating WhatsApp bubble while the form is on screen so it can't cover the submit button
+  const waFloat = document.querySelector('.wa-float');
+  if (waFloat && 'IntersectionObserver' in window) {
+    new IntersectionObserver(es => es.forEach(en => waFloat.classList.toggle('hide', en.isIntersecting)), { threshold: 0.05 })
+      .observe(form);
+  }
 
   $('regCopy').addEventListener('click', async () => {
     const msg = form.dataset.msg || buildMessage();
