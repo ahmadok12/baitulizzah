@@ -1349,6 +1349,8 @@ document.addEventListener('click', (e) => {
 // ===== Registration form → WhatsApp =====
 (function () {
   const ACADEMY_WA = '923167959923';
+  // Google Sheet web-app URL (see google-apps-script/Code.gs). Leave empty to disable saving.
+  const SHEET_URL = '';
   const COUNTRIES = ["Afghanistan","Albania","Algeria","Andorra","Angola","Antigua and Barbuda","Argentina","Armenia","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bhutan","Bolivia","Bosnia and Herzegovina","Botswana","Brazil","Brunei","Bulgaria","Burkina Faso","Burundi","Cabo Verde","Cambodia","Cameroon","Canada","Central African Republic","Chad","Chile","China","Colombia","Comoros","Congo (Congo-Brazzaville)","Costa Rica","Côte d'Ivoire","Croatia","Cuba","Cyprus","Czechia","Democratic Republic of the Congo","Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia","Eswatini","Ethiopia","Fiji","Finland","France","Gabon","Gambia","Georgia","Germany","Ghana","Greece","Grenada","Guatemala","Guinea","Guinea-Bissau","Guyana","Haiti","Honduras","Hong Kong","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Italy","Jamaica","Japan","Jordan","Kazakhstan","Kenya","Kiribati","Kosovo","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Marshall Islands","Mauritania","Mauritius","Mexico","Micronesia","Moldova","Monaco","Mongolia","Montenegro","Morocco","Mozambique","Myanmar","Namibia","Nauru","Nepal","Netherlands","New Zealand","Nicaragua","Niger","Nigeria","North Korea","North Macedonia","Norway","Oman","Pakistan","Palau","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Qatar","Romania","Russia","Rwanda","Saint Kitts and Nevis","Saint Lucia","Saint Vincent and the Grenadines","Samoa","San Marino","São Tomé and Príncipe","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","Solomon Islands","Somalia","South Africa","South Korea","South Sudan","Spain","Sri Lanka","Sudan","Suriname","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Timor-Leste","Togo","Tonga","Trinidad and Tobago","Tunisia","Turkey","Turkmenistan","Tuvalu","Uganda","Ukraine","United Arab Emirates","United Kingdom","United States","Uruguay","Uzbekistan","Vanuatu","Vatican City","Venezuela","Vietnam","Yemen","Zambia","Zimbabwe"];
 
   const form = document.getElementById('regForm');
@@ -1471,6 +1473,64 @@ document.addEventListener('click', (e) => {
 
   const val = id => $(id).value.trim();
 
+  // ===== Save to Google Sheet (also saves forms that are never submitted) =====
+  const ENTRY_KEY = 'biz_reg_entry_id';
+  let entryId = null;
+  try { entryId = sessionStorage.getItem(ENTRY_KEY); } catch (e) {}
+  if (!entryId) {
+    entryId = 'R' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).slice(2, 6).toUpperCase();
+    try { sessionStorage.setItem(ENTRY_KEY, entryId); } catch (e) {}
+  }
+  let submitted = false, dirty = false, lastSent = '', saveTimer = null;
+
+  function collect(status) {
+    const prev = form.querySelector('.prev-edu:checked');
+    return {
+      id: entryId, status,
+      fullName: val('rFullName'), age: val('rAge'), marital: val('rMarital'),
+      family: $('rFamily').value,
+      relation: form.querySelector('input[name="relation"]:checked').value,
+      guardianName: val('rGName'), guardianOccupation: val('rGOcc'),
+      country: val('rCountry'), city: val('rCity'),
+      languages: langSel.join(', '), education: val('rEducation'),
+      prevEducation: prev ? prev.value : '',
+      institute: prev && prev.value === 'Yes' ? val('rInstitute') : '',
+      mobile: val('rMobile'), whatsapp: val('rWhatsapp'), email: val('rEmail'),
+      page: location.href, device: navigator.userAgent
+    };
+  }
+  function hasData(d) {
+    return ['fullName','age','marital','family','guardianName','guardianOccupation','country','city',
+            'languages','education','prevEducation','institute','mobile','whatsapp','email'].some(k => d[k]);
+  }
+  function sendToSheet(status) {
+    if (!SHEET_URL) return;
+    const d = collect(status);
+    if (!hasData(d)) return;
+    const body = JSON.stringify(d);
+    const sig = body.replace(/"page":.*$/, '');
+    if (sig === lastSent) return;          // nothing changed since last save
+    lastSent = sig; dirty = false;
+    let ok = false;
+    try { ok = navigator.sendBeacon && navigator.sendBeacon(SHEET_URL, new Blob([body], { type: 'text/plain;charset=utf-8' })); } catch (e) {}
+    if (!ok) {
+      try { fetch(SHEET_URL, { method: 'POST', mode: 'no-cors', keepalive: true, headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body }); } catch (e) {}
+    }
+  }
+  function scheduleDraftSave() {
+    if (submitted) return;
+    dirty = true;
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(() => sendToSheet('Incomplete'), 4000);   // 4s after typing stops
+  }
+  form.addEventListener('input', scheduleDraftSave);
+  form.addEventListener('change', scheduleDraftSave);
+  langList.addEventListener('mousedown', scheduleDraftSave);
+  langBox.addEventListener('mousedown', scheduleDraftSave);
+  const flushDraft = () => { if (dirty && !submitted) { clearTimeout(saveTimer); sendToSheet('Incomplete'); } };
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') flushDraft(); });
+  window.addEventListener('pagehide', flushDraft);
+
   function buildMessage() {
     const rel = form.querySelector('input[name="relation"]:checked').value;
     const prev = form.querySelector('.prev-edu:checked');
@@ -1516,7 +1576,11 @@ document.addEventListener('click', (e) => {
   // --- Submit: always try to deliver the responses to WhatsApp ---
   form.addEventListener('submit', e => {
     e.preventDefault();
-    if (!validate()) return;
+    if (!validate()) { sendToSheet('Incomplete'); return; }
+    submitted = true;
+    clearTimeout(saveTimer);
+    sendToSheet('Submitted');
+    try { sessionStorage.removeItem(ENTRY_KEY); } catch (e) {}   // next registration gets a fresh row
     const msg = buildMessage();
     const url = 'https://wa.me/' + ACADEMY_WA + '?text=' + encodeURIComponent(msg);
 
