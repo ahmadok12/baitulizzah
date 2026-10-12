@@ -865,6 +865,15 @@
   .reg-done p { margin-bottom: 0.9rem; font-weight: 600; }
   .reg-done .contact-btns { gap: 0.6rem; }
   .reg-done button.btn-primary { border: none; cursor: pointer; font-family: inherit; }
+  .reg-done h3 { font-size: 1.35rem; color: var(--soft-green); margin: 0.25rem 0 0.6rem; }
+  .reg-done .reg-done-icon { font-size: 2.6rem; line-height: 1; }
+  .reg-done .reg-done-text { font-weight: 400; color: var(--text); }
+  .reg-done .reg-ref { font-size: 0.85rem; font-weight: 400; opacity: 0.85; }
+  .reg-done .reg-optional { display: block; font-size: 0.75rem; font-weight: 400; margin-top: 0.75rem; opacity: 0.8; }
+  .reg-done .reg-again { background: none; border: none; cursor: pointer; font-family: inherit; color: inherit; text-decoration: underline; font-size: 0.85rem; margin-top: 0.9rem; }
+  .reg-form.is-done > :not(.reg-done) { display: none; }
+  .reg-form.is-done .reg-done { margin-top: 0; }
+  .reg-submit[disabled] { opacity: 0.7; cursor: progress; }
 
   @media (max-width: 600px) {
     .reg-form { padding: 1.4rem 1.1rem; border-radius: 18px; }
@@ -1406,7 +1415,7 @@
       </details>
       <details class="faq-item">
         <summary><h3>How do I register?</h3></summary>
-        <p>Fill in the registration form at the bottom of this page and tap “Submit via WhatsApp”. Your details are sent to us on WhatsApp, and we reply to agree a class schedule that fits your time zone.</p>
+        <p>Fill in the registration form at the bottom of this page and tap “Submit Registration”. Your details reach us straight away, and we contact you on WhatsApp to agree a class schedule that fits your time zone.</p>
       </details>
   </div>
 </section>
@@ -1435,7 +1444,7 @@
   <div class="register-head fade-in">
     <div class="section-eyebrow">Admission Form</div>
     <h2 class="section-title">Register for <em>Classes</em></h2>
-    <p class="section-desc">Fill in the details below and tap submit — your registration will be sent to us on WhatsApp and we'll get back to you, In sha Allah.</p>
+    <p class="section-desc">Fill in the details below and tap submit — your registration comes straight to us and we'll contact you on WhatsApp, In sha Allah.</p>
   </div>
 
   <form class="reg-form fade-in" id="regForm" novalidate autocomplete="on">
@@ -1553,15 +1562,32 @@
     </div>
 
     <div class="reg-actions">
-      <button type="submit" class="btn-wa reg-submit">💬 Submit via WhatsApp</button>
-      <span class="reg-note">Fields marked <span style="color:#c0392b">*</span> are required. WhatsApp will open with your details ready to send.</span>
+      <button type="submit" class="btn-wa reg-submit" id="regSubmit">✅ Submit Registration</button>
+      <span class="reg-note">Fields marked <span style="color:#c0392b">*</span> are required. We'll contact you on WhatsApp after you submit.</span>
     </div>
 
-    <div class="reg-done" id="regDone" role="status" aria-live="polite">
-      <p>✅ Your details are ready! If WhatsApp didn't open, tap the button below to send them.</p>
-      <div class="contact-btns">
-        <a href="#" target="_blank" rel="noopener" class="btn-wa" id="regWaLink">💬 Send on WhatsApp</a>
-        <button type="button" class="btn-primary" id="regCopy">📋 Copy Details</button>
+    <div class="reg-done" id="regDone" role="status" aria-live="polite" tabindex="-1">
+      <!-- Shown when the registration is saved -->
+      <div id="regOk" hidden>
+        <div class="reg-done-icon">✅</div>
+        <h3>Registration received — JazakAllahu Khairan!</h3>
+        <p class="reg-done-text">Thank you<span id="regName"></span>. Our team will contact you on WhatsApp<span id="regPhone"></span> within 24 hours, In sha Allah, to arrange your class schedule.</p>
+        <p class="reg-ref">Your reference: <b id="regRef"></b></p>
+        <p class="reg-ref" id="regMailNote" hidden>📧 A confirmation has been emailed to <b id="regMail"></b> (check your spam folder if you don't see it).</p>
+        <div class="contact-btns">
+          <a href="#" target="_blank" rel="noopener" class="btn-wa" id="regChat">💬 Chat with us on WhatsApp</a>
+        </div>
+        <span class="reg-optional">Optional — only if you'd like a faster reply. Your registration is already with us.</span>
+        <button type="button" class="reg-again" id="regAgain">➕ Register another person</button>
+      </div>
+      <!-- Shown only if saving failed (no internet etc.) -->
+      <div id="regFail" hidden>
+        <p>⚠️ We couldn't submit your form just now. Please send your details to us on WhatsApp instead — they're already filled in.</p>
+        <div class="contact-btns">
+          <a href="#" target="_blank" rel="noopener" class="btn-wa" id="regWaLink">💬 Send on WhatsApp</a>
+          <button type="button" class="btn-primary" id="regCopy">📋 Copy Details</button>
+        </div>
+        <button type="button" class="reg-again" id="regRetry">🔄 Try submitting again</button>
       </div>
     </div>
   </form>
@@ -1886,43 +1912,117 @@ document.addEventListener('click', (e) => {
     return !first;
   }
 
-  // --- Submit: always try to deliver the responses to WhatsApp ---
+  // --- Submit: save to the Sheet (which emails the academy), then show a success screen ---
+  const submitBtn = $('regSubmit');
+  const submitLabel = submitBtn.textContent;
+  let sending = false;
+
+  // Sends the registration and waits for the Sheet to confirm it was saved.
+  async function saveRegistration(data) {
+    if (!SHEET_URL) throw new Error('no endpoint');
+    const ctrl = 'AbortController' in window ? new AbortController() : null;
+    const timer = ctrl && setTimeout(() => ctrl.abort(), 25000);
+    try {
+      const res = await fetch(SHEET_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },   // "simple" request: no CORS preflight
+        body: JSON.stringify(data),
+        redirect: 'follow',
+        signal: ctrl ? ctrl.signal : undefined
+      });
+      const out = await res.json();
+      if (!out || !out.ok) throw new Error((out && out.error) || 'not saved');
+      return out;
+    } finally { if (timer) clearTimeout(timer); }
+  }
+
+  function showSuccess(data, out) {
+    const phone = data.whatsapp || data.mobile;
+    $('regMail').textContent = data.email || '';
+    $('regMailNote').hidden = !(out && out.studentEmailed === true);
+    $('regName').textContent = data.fullName ? ', ' + data.fullName.split(/\s+/)[0] : '';
+    $('regPhone').textContent = phone ? ' (' + phone + ')' : '';
+    $('regRef').textContent = data.id;
+    const chat = 'Assalamu alaikum! I have just registered on the Bait ul Izzah website.\n' +
+      '*Name:* ' + (data.fullName || '-') + '\n*Reference:* ' + data.id;
+    $('regChat').href = 'https://wa.me/' + ACADEMY_WA + '?text=' + encodeURIComponent(chat);
+    $('regFail').hidden = true;
+    $('regOk').hidden = false;
+    $('regDone').classList.add('show');
+    form.classList.add('is-done');
+    // The form collapses to the success card, so jump (not smooth-scroll) to keep it in view
+    const top = $('register').getBoundingClientRect().top + window.scrollY - 70;
+    window.scrollTo({ top: Math.max(0, top), behavior: 'auto' });
+    try { $('regDone').focus({ preventScroll: true }); } catch (e) {}
+  }
+
+  function showFallback() {
+    // Saving failed: offer the old WhatsApp route with every detail filled in
+    const msg = buildMessage() + '\n\n*Reference:* ' + entryId;
+    form.dataset.msg = msg;
+    $('regWaLink').href = 'https://wa.me/' + ACADEMY_WA + '?text=' + encodeURIComponent(msg);
+    $('regCopy').textContent = '📋 Copy Details';
+    $('regOk').hidden = true;
+    $('regFail').hidden = false;
+    $('regDone').classList.add('show');
+    $('regDone').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  async function submitRegistration() {
+    if (sending) return;
+    sending = true;
+    submitted = true;                 // stop draft autosaves from racing the real submit
+    clearTimeout(saveTimer);
+    submitBtn.disabled = true;
+    submitBtn.textContent = '⏳ Submitting…';
+    const data = collect('Submitted');
+    try {
+      const out = await saveRegistration(data);
+      showSuccess(data, out);
+    } catch (err) {
+      // Last-chance background save in case the request reached the Sheet but the reply was lost.
+      // The Sheet keys rows by entry ID, so this never creates a duplicate or a second email.
+      try {
+        const body = JSON.stringify(data);
+        if (!(navigator.sendBeacon && navigator.sendBeacon(SHEET_URL, new Blob([body], { type: 'text/plain;charset=utf-8' })))) {
+          fetch(SHEET_URL, { method: 'POST', mode: 'no-cors', keepalive: true, headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body }).catch(() => {});
+        }
+      } catch (e) {}
+      showFallback();
+    } finally {
+      sending = false;
+      submitBtn.disabled = false;
+      submitBtn.textContent = submitLabel;
+    }
+  }
+
   form.addEventListener('submit', e => {
     e.preventDefault();
-    if (!validate()) { sendToSheet('Incomplete'); return; }
-    submitted = true;
-    clearTimeout(saveTimer);
-    sendToSheet('Submitted');
-    const msg = buildMessage();
-    const url = 'https://wa.me/' + ACADEMY_WA + '?text=' + encodeURIComponent(msg);
-
-    // Fallback panel is shown every time, so the details can still be sent
-    // if WhatsApp doesn't open (popup blocked, app missing, network error…)
-    $('regWaLink').href = url;
-    $('regDone').classList.add('show');
-    form.dataset.msg = msg;
-
-    $('regDone').scrollIntoView({ behavior: 'smooth', block: 'center' });
-    openWhatsApp(url);
+    if (sending) return;
+    if (!validate()) { submitted = false; sendToSheet('Incomplete'); return; }
+    submitRegistration();
   });
 
-  // Open WhatsApp as reliably as possible across phones, desktops and in-app browsers
-  function openWhatsApp(url) {
-    const isMobile = /Android|iPhone|iPad|iPod|Mobile|Opera Mini|IEMobile/i.test(navigator.userAgent);
-    if (isMobile) {
-      // Phones: same-tab navigation hands off straight to the WhatsApp app (no popup to block)
-      try { window.top.location.href = url; return; } catch (e) {}
-      try { window.location.href = url; return; } catch (e) {}
-    } else {
-      // Desktop: new tab with WhatsApp Web; if blocked, use the current tab
-      let w = null;
-      try { w = window.open(url, '_blank'); } catch (e) { w = null; }
-      if (w) { try { w.opener = null; } catch (e) {} return; }
-      try { window.top.location.href = url; return; } catch (e) {}
-      try { window.location.href = url; } catch (e) {}
-    }
-    // If everything above was blocked, the "Send on WhatsApp" / "Copy Details" panel stays visible
-  }
+  $('regRetry').addEventListener('click', () => { if (validate()) submitRegistration(); });
+
+  // Start a fresh form (e.g. a mother registering a second child) — new entry ID, so it's a new row + new email
+  $('regAgain').addEventListener('click', () => {
+    form.reset();
+    langSel.length = 0; langRender();
+    chosen = '';
+    instWrap.classList.add('reg-hidden');
+    mobile.readOnly = false;
+    const rel = form.querySelector('input[name="relation"]:checked');
+    if (rel) rel.dispatchEvent(new Event('change'));
+    form.querySelectorAll('.reg-input').forEach(clearErr);
+    entryId = newEntryId();
+    submitted = false; dirty = false; lastSent = '';
+    $('regOk').hidden = true; $('regFail').hidden = true;
+    $('regDone').classList.remove('show');
+    form.classList.remove('is-done');
+    $('register').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setTimeout(() => $('rFullName').focus({ preventScroll: true }), 400);
+  });
 
   // Hide the floating WhatsApp bubble while the form is on screen so it can't cover the submit button
   const waFloat = document.querySelector('.wa-float');
