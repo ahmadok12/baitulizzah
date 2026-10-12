@@ -21,6 +21,9 @@
  *
  * EMAIL ALERTS: run the function "testEmailAlert" once from the editor (select it in the
  * toolbar → Run) to grant the "send email" permission and receive a sample alert.
+ * Every submitted registration emails ALERT_EMAIL. If an email fails (e.g. Gmail hiccup or
+ * daily quota), it is retried and then queued, and re-sent automatically on the next website
+ * request or with the 9 AM daily email. Run "checkPendingAlerts" to see the queue.
  *
  * DAILY INCOMPLETE-FORMS EMAIL: run "setupDailyDigest" once from the editor. Every morning at
  * 9 AM (Pakistan time) you'll get a list of people who started the form in the last 24 hours
@@ -81,70 +84,77 @@ function doPost(e) {
   lock.waitLock(20000);
   try {
     const data = JSON.parse((e && e.postData && e.postData.contents) || '{}');
-    if (data.type === 'visit') return logVisit_(data);
-    if (!data.id) return json_({ ok: false, error: 'missing id' });
-
-    const sh = getSheet_();
-    const now = new Date();
-    const last = sh.getLastRow();
-
-    // Find existing row for this entry
-    let rowIndex = -1;
-    if (last > 1) {
-      const ids = sh.getRange(2, 1, last - 1, 1).getValues();
-      for (let i = ids.length - 1; i >= 0; i--) {
-        if (String(ids[i][0]) === String(data.id)) { rowIndex = i + 2; break; }
-      }
-    }
-
-    let row;
-    if (rowIndex > 0) {
-      row = sh.getRange(rowIndex, 1, 1, COLUMNS.length).getValues()[0];
-    } else {
-      row = COLUMNS.map(() => '');
-      row[colIdx_('firstSeen')] = now;
-    }
-
-    // Never downgrade a submitted entry back to Incomplete
-    const prevStatus = row[colIdx_('status')];
-    const status = (prevStatus === 'Submitted' && data.status !== 'Submitted') ? 'Submitted' : (data.status || 'Incomplete');
-
-    COLUMNS.forEach(([key], i) => {
-      if (['id', 'status', 'firstSeen', 'lastUpdated', 'submittedAt'].includes(key)) return;
-      if (data[key] !== undefined) row[i] = data[key];
-    });
-    row[colIdx_('id')] = data.id;
-    row[colIdx_('status')] = status;
-    row[colIdx_('lastUpdated')] = now;
-    const isNewSubmission = data.status === 'Submitted' && !row[colIdx_('submittedAt')];
-    if (isNewSubmission) row[colIdx_('submittedAt')] = now;
-
-    // Keep phone numbers as text (stops Sheets from dropping the leading 0 / +)
-    ['mobile', 'whatsapp'].forEach(k => {
-      const v = row[colIdx_(k)];
-      if (v && String(v).charAt(0) !== "'") row[colIdx_(k)] = "'" + v;
-    });
-
-    if (rowIndex > 0) {
-      sh.getRange(rowIndex, 1, 1, COLUMNS.length).setValues([row]);
-    } else {
-      sh.appendRow(row);
-      rowIndex = sh.getLastRow();
-    }
-    sh.getRange(rowIndex, colIdx_('status') + 1)
-      .setBackground(status === 'Submitted' ? '#b7e4c7' : '#fdf3dc');
-
-    if (isNewSubmission) {
-      try { recordSubmission_(row); } catch (subErr) { console.error('Submissions copy failed: ' + subErr); }
-      try { sendAlert_(row, rowIndex); } catch (mailErr) { console.error('Email alert failed: ' + mailErr); }
-    }
-
-    return json_({ ok: true, row: rowIndex, status: status });
+    const result = data.type === 'visit' ? logVisit_(data) : saveRegistration_(data);
+    // Any request (registrations and page visits) also re-sends alert emails that failed earlier
+    try { retryPendingAlerts_(); } catch (retryErr) { console.error('Alert retry failed: ' + retryErr); }
+    return json_(result);
   } catch (err) {
     return json_({ ok: false, error: String(err) });
   } finally {
     lock.releaseLock();
   }
+}
+
+function saveRegistration_(data) {
+  if (!data.id) return { ok: false, error: 'missing id' };
+
+  const sh = getSheet_();
+  const now = new Date();
+  const last = sh.getLastRow();
+
+  // Find existing row for this entry
+  let rowIndex = -1;
+  if (last > 1) {
+    const ids = sh.getRange(2, 1, last - 1, 1).getValues();
+    for (let i = ids.length - 1; i >= 0; i--) {
+      if (String(ids[i][0]) === String(data.id)) { rowIndex = i + 2; break; }
+    }
+  }
+
+  let row;
+  if (rowIndex > 0) {
+    row = sh.getRange(rowIndex, 1, 1, COLUMNS.length).getValues()[0];
+  } else {
+    row = COLUMNS.map(() => '');
+    row[colIdx_('firstSeen')] = now;
+  }
+
+  // Never downgrade a submitted entry back to Incomplete
+  const prevStatus = row[colIdx_('status')];
+  const status = (prevStatus === 'Submitted' && data.status !== 'Submitted') ? 'Submitted' : (data.status || 'Incomplete');
+
+  COLUMNS.forEach(([key], i) => {
+    if (['id', 'status', 'firstSeen', 'lastUpdated', 'submittedAt'].includes(key)) return;
+    if (data[key] !== undefined) row[i] = data[key];
+  });
+  row[colIdx_('id')] = data.id;
+  row[colIdx_('status')] = status;
+  row[colIdx_('lastUpdated')] = now;
+  const isNewSubmission = data.status === 'Submitted' && !row[colIdx_('submittedAt')];
+  if (isNewSubmission) row[colIdx_('submittedAt')] = now;
+
+  // Keep phone numbers as text (stops Sheets from dropping the leading 0 / +)
+  ['mobile', 'whatsapp'].forEach(k => {
+    const v = row[colIdx_(k)];
+    if (v && String(v).charAt(0) !== "'") row[colIdx_(k)] = "'" + v;
+  });
+
+  if (rowIndex > 0) {
+    sh.getRange(rowIndex, 1, 1, COLUMNS.length).setValues([row]);
+  } else {
+    sh.appendRow(row);
+    rowIndex = sh.getLastRow();
+  }
+  sh.getRange(rowIndex, colIdx_('status') + 1)
+    .setBackground(status === 'Submitted' ? '#b7e4c7' : '#fdf3dc');
+
+  let emailed = null;
+  if (isNewSubmission) {
+    try { recordSubmission_(row); } catch (subErr) { console.error('Submissions copy failed: ' + subErr); }
+    emailed = sendAlertReliably_(row, rowIndex);
+  }
+
+  return { ok: true, ref: data.id, row: rowIndex, status: status, emailed: emailed };
 }
 
 function doGet() {
@@ -153,6 +163,14 @@ function doGet() {
 
 function colIdx_(key) {
   return COLUMNS.findIndex(c => c[0] === key);
+}
+
+function findRow_(sh, id) {
+  const last = sh.getLastRow();
+  if (last < 2) return -1;
+  const ids = sh.getRange(2, 1, last - 1, 1).getValues();
+  for (let i = ids.length - 1; i >= 0; i--) if (String(ids[i][0]) === String(id)) return i + 2;
+  return -1;
 }
 
 function json_(obj) {
@@ -210,8 +228,60 @@ function sendAlert_(row, rowIndex) {
     subject: 'New Registration: ' + get('fullName') + ' (' + (get('whatsapp') !== '-' ? get('whatsapp') : get('mobile')) + ')',
     body: plain,
     htmlBody: html,
-    name: 'Bait ul Izzah Website'
+    name: 'Bait ul Izzah Website',
+    replyTo: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(get('email')) ? get('email') : ALERT_EMAIL
   });
+}
+
+// ===== Reliable alerts: retry, then queue anything that still failed and re-send it later =====
+const PENDING_ALERTS_KEY = 'pendingAlerts';
+
+function sendAlertReliably_(row, rowIndex) {
+  for (let attempt = 1; attempt <= 2; attempt++) {
+    try { sendAlert_(row, rowIndex); return true; }
+    catch (err) {
+      console.error('Email alert attempt ' + attempt + ' failed: ' + err);
+      if (attempt === 1) Utilities.sleep(1500);
+    }
+  }
+  queuePendingAlert_(row[colIdx_('id')]);
+  return false;
+}
+
+function queuePendingAlert_(id) {
+  const props = PropertiesService.getScriptProperties();
+  const list = JSON.parse(props.getProperty(PENDING_ALERTS_KEY) || '[]');
+  if (list.indexOf(String(id)) === -1) list.push(String(id));
+  props.setProperty(PENDING_ALERTS_KEY, JSON.stringify(list));
+}
+
+// Re-sends queued alerts. Runs on every website request and with the 9 AM daily email.
+function retryPendingAlerts_() {
+  const props = PropertiesService.getScriptProperties();
+  const list = JSON.parse(props.getProperty(PENDING_ALERTS_KEY) || '[]');
+  if (!list.length) return;
+  const sh = getSheet_();
+  const remaining = [];
+  let stop = false;
+  list.forEach(id => {
+    if (stop) { remaining.push(id); return; }
+    const r = findRow_(sh, id);
+    if (r < 0) return;   // row was deleted – nothing to send
+    try {
+      sendAlert_(sh.getRange(r, 1, 1, COLUMNS.length).getValues()[0], r);
+    } catch (err) {
+      console.error('Retry of alert ' + id + ' failed: ' + err);
+      remaining.push(id);
+      stop = true;       // e.g. daily email quota reached – try again later
+    }
+  });
+  props.setProperty(PENDING_ALERTS_KEY, JSON.stringify(remaining));
+}
+
+// Run from the editor to see how many alert emails are waiting to be re-sent.
+function checkPendingAlerts() {
+  const list = JSON.parse(PropertiesService.getScriptProperties().getProperty(PENDING_ALERTS_KEY) || '[]');
+  console.log(list.length + ' alert(s) waiting: ' + list.join(', ') + ' | emails left today: ' + MailApp.getRemainingDailyQuota());
 }
 
 // Run this once from the Apps Script editor to authorize email sending and get a sample alert.
@@ -292,7 +362,7 @@ function logVisit_(d) {
     clip(d.device, 20), clip(d.source, 40), clip(d.referrer, 200),
     clip(d.lang, 20), clip(d.tz, 60), clip(d.visitor, 40), d.returning ? 'Returning' : 'New'
   ]);
-  return json_({ ok: true });
+  return { ok: true };
 }
 
 // Run once: builds a "Visitor Dashboard" tab with live formulas (safe to run again).
@@ -365,6 +435,7 @@ function visitSummary_(since) {
 
 // ===== Daily email: visitors + forms started but not submitted =====
 function sendIncompleteDigest() {
+  try { retryPendingAlerts_(); } catch (err) { console.error('Alert retry failed: ' + err); }
   const sh = getSheet_();
   const last = sh.getLastRow();
   const rows = last >= 2 ? sh.getRange(2, 1, last - 1, COLUMNS.length).getValues() : [];
