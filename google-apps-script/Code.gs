@@ -25,6 +25,10 @@
  * daily quota), it is retried and then queued, and re-sent automatically on the next website
  * request or with the 9 AM daily email. Run "checkPendingAlerts" to see the queue.
  *
+ * STUDENT CONFIRMATION: students who enter an email address get a "Registration received"
+ * email with their reference and details (replies come to ALERT_EMAIL). Run
+ * "testStudentConfirmation" to see a sample. Turn off with SEND_STUDENT_CONFIRMATION = false.
+ *
  * DAILY INCOMPLETE-FORMS EMAIL: run "setupDailyDigest" once from the editor. Every morning at
  * 9 AM (Pakistan time) you'll get a list of people who started the form in the last 24 hours
  * but didn't submit, with WhatsApp buttons to follow up. Run "sendIncompleteDigest" to test now.
@@ -40,6 +44,9 @@
 
 const SHEET_NAME = 'Registrations';
 const ALERT_EMAIL = 'baitulizzah2024@gmail.com';   // gets an email for every new submitted registration
+const SEND_STUDENT_CONFIRMATION = true;            // email the student a confirmation (when they give an email)
+const ACADEMY_WHATSAPP = '923167959923';
+const WEBSITE_URL = 'https://baitulizzah.online/';
 
 const COLUMNS = [
   ['id', 'Entry ID'],
@@ -148,13 +155,14 @@ function saveRegistration_(data) {
   sh.getRange(rowIndex, colIdx_('status') + 1)
     .setBackground(status === 'Submitted' ? '#b7e4c7' : '#fdf3dc');
 
-  let emailed = null;
+  let emailed = null, studentEmailed = null;
   if (isNewSubmission) {
     try { recordSubmission_(row); } catch (subErr) { console.error('Submissions copy failed: ' + subErr); }
     emailed = sendAlertReliably_(row, rowIndex);
+    try { studentEmailed = sendStudentConfirmation_(row); } catch (confErr) { console.error('Student confirmation failed: ' + confErr); studentEmailed = false; }
   }
 
-  return { ok: true, ref: data.id, row: rowIndex, status: status, emailed: emailed };
+  return { ok: true, ref: data.id, row: rowIndex, status: status, emailed: emailed, studentEmailed: studentEmailed };
 }
 
 function doGet() {
@@ -282,6 +290,92 @@ function retryPendingAlerts_() {
 function checkPendingAlerts() {
   const list = JSON.parse(PropertiesService.getScriptProperties().getProperty(PENDING_ALERTS_KEY) || '[]');
   console.log(list.length + ' alert(s) waiting: ' + list.join(', ') + ' | emails left today: ' + MailApp.getRemainingDailyQuota());
+}
+
+// ===== Confirmation email to the student =====
+// Sent once per registration, only if the student entered a valid email address.
+// Replies go to the academy inbox. Returns true if sent, null if there was no email to send to.
+function sendStudentConfirmation_(row) {
+  if (!SEND_STUDENT_CONFIRMATION) return null;
+  const get = k => {
+    const v = row[colIdx_(k)];
+    return (v === '' || v === null || v === undefined) ? '' : String(v).replace(/^'/, '').trim();
+  };
+  const to = get('email');
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(to)) return null;
+
+  const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const fullName = get('fullName') || 'Student';
+  const firstName = fullName.split(/\s+/)[0];
+  const ref = get('id');
+  const phone = get('whatsapp') || get('mobile');
+  const relation = get('relation') || 'Guardian';
+  const fields = [
+    ['Reference', ref],
+    ['Full Name', fullName],
+    ['WhatsApp Number', get('whatsapp')],
+    ['Mobile Number', get('mobile')],
+    ['Age', get('age') ? get('age') + ' Years' : ''],
+    [relation + "'s Name", get('guardianName')],
+    ['Country', get('country')],
+    ['City', get('city')],
+    ['Languages', get('languages')],
+    ['Education', get('education')]
+  ].filter(([, v]) => v);
+  const chatText = 'Assalamu alaikum! I registered on the Bait ul Izzah website.\nName: ' + fullName + '\nReference: ' + ref;
+  const chatUrl = 'https://wa.me/' + ACADEMY_WHATSAPP + '?text=' + encodeURIComponent(chatText);
+
+  const html =
+    '<div style="font-family:Arial,sans-serif;max-width:560px;color:#1a2e1a;line-height:1.55">' +
+    '<h2 style="color:#2d6a4f;margin:0 0 4px">Assalamu alaikum, ' + esc(firstName) + '!</h2>' +
+    '<p style="margin:0 0 16px;color:#6b6b5a">Bait ul Izzah Quran Academy</p>' +
+    '<p>JazakAllahu Khairan for registering with us. We have received your registration.</p>' +
+    '<p><b>What happens next:</b> our team will contact you on WhatsApp' + (phone ? ' at <b>' + esc(phone) + '</b>' : '') +
+    ' within 24 hours, In sha Allah, to arrange a class schedule that suits your time zone.</p>' +
+    '<p style="margin:18px 0 6px;font-weight:bold;color:#2d6a4f">Your registration details</p>' +
+    '<table style="border-collapse:collapse;width:100%;font-size:14px">' +
+    fields.map(([k, v], i) =>
+      '<tr style="background:' + (i % 2 ? '#ffffff' : '#f6faf6') + '">' +
+      '<td style="padding:7px 10px;font-weight:bold;width:42%;border-bottom:1px solid #e5eee5">' + esc(k) + '</td>' +
+      '<td style="padding:7px 10px;border-bottom:1px solid #e5eee5">' + esc(v) + '</td></tr>').join('') +
+    '</table>' +
+    '<p style="margin:14px 0 0;font-size:13px;color:#6b6b5a">If anything above is wrong, simply reply to this email or message us on WhatsApp.</p>' +
+    '<p style="margin:18px 0">' +
+    '<a href="' + chatUrl + '" style="background:#25D366;color:#fff;padding:10px 18px;border-radius:20px;text-decoration:none;font-weight:bold">Message us on WhatsApp</a>' +
+    '</p>' +
+    '<p style="margin:0">May Allah make your Quranic journey easy and blessed.<br>— Bait ul Izzah Quran Academy</p>' +
+    '<p style="margin:16px 0 0;font-size:12px;color:#999">WhatsApp / Call: +92 316 7959923 · <a href="' + WEBSITE_URL + '" style="color:#2d6a4f">baitulizzah.online</a><br>' +
+    'You received this email because this address was entered on our registration form.</p>' +
+    '</div>';
+
+  const plain = 'Assalamu alaikum, ' + firstName + '!\n\n' +
+    'JazakAllahu Khairan for registering with Bait ul Izzah Quran Academy. We have received your registration.\n\n' +
+    'What happens next: our team will contact you on WhatsApp' + (phone ? ' at ' + phone : '') +
+    ' within 24 hours, In sha Allah, to arrange your class schedule.\n\n' +
+    'Your registration details:\n' + fields.map(([k, v]) => k + ': ' + v).join('\n') + '\n\n' +
+    'If anything is wrong, reply to this email or message us on WhatsApp: ' + chatUrl + '\n\n' +
+    '— Bait ul Izzah Quran Academy\nWhatsApp / Call: +92 316 7959923 · ' + WEBSITE_URL;
+
+  MailApp.sendEmail({
+    to: to,
+    subject: 'Registration received – Bait ul Izzah Quran Academy (Ref ' + ref + ')',
+    body: plain,
+    htmlBody: html,
+    name: 'Bait ul Izzah Quran Academy',
+    replyTo: ALERT_EMAIL
+  });
+  return true;
+}
+
+// Run once from the editor to see the student confirmation email (sent to ALERT_EMAIL).
+function testStudentConfirmation() {
+  const sample = COLUMNS.map(() => '');
+  const set = (k, v) => { sample[colIdx_(k)] = v; };
+  set('id', 'RTEST123'); set('fullName', 'Sample Student'); set('whatsapp', '+92 300 1234567');
+  set('age', 25); set('relation', 'Father'); set('guardianName', 'Sample Father');
+  set('country', 'Pakistan'); set('city', 'Okara'); set('languages', 'Urdu, English');
+  set('email', ALERT_EMAIL);
+  sendStudentConfirmation_(sample);
 }
 
 // Run this once from the Apps Script editor to authorize email sending and get a sample alert.

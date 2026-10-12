@@ -1573,6 +1573,7 @@
         <h3>Registration received — JazakAllahu Khairan!</h3>
         <p class="reg-done-text">Thank you<span id="regName"></span>. Our team will contact you on WhatsApp<span id="regPhone"></span> within 24 hours, In sha Allah, to arrange your class schedule.</p>
         <p class="reg-ref">Your reference: <b id="regRef"></b></p>
+        <p class="reg-ref" id="regMailNote" hidden>📧 A confirmation has been emailed to <b id="regMail"></b> (check your spam folder if you don't see it).</p>
         <div class="contact-btns">
           <a href="#" target="_blank" rel="noopener" class="btn-wa" id="regChat">💬 Chat with us on WhatsApp</a>
         </div>
@@ -1935,8 +1936,10 @@ document.addEventListener('click', (e) => {
     } finally { if (timer) clearTimeout(timer); }
   }
 
-  function showSuccess(data) {
+  function showSuccess(data, out) {
     const phone = data.whatsapp || data.mobile;
+    $('regMail').textContent = data.email || '';
+    $('regMailNote').hidden = !(out && out.studentEmailed === true);
     $('regName').textContent = data.fullName ? ', ' + data.fullName.split(/\s+/)[0] : '';
     $('regPhone').textContent = phone ? ' (' + phone + ')' : '';
     $('regRef').textContent = data.id;
@@ -1974,8 +1977,8 @@ document.addEventListener('click', (e) => {
     submitBtn.textContent = '⏳ Submitting…';
     const data = collect('Submitted');
     try {
-      await saveRegistration(data);
-      showSuccess(data);
+      const out = await saveRegistration(data);
+      showSuccess(data, out);
     } catch (err) {
       // Last-chance background save in case the request reached the Sheet but the reply was lost.
       // The Sheet keys rows by entry ID, so this never creates a duplicate or a second email.
