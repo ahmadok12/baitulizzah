@@ -148,199 +148,220 @@
     pointer-events: none;
   }
 
-  /* HERO */
+  /* HERO — "Noor" lantern redesign */
   .hero {
+    --hero-bg: #0b1711;
+    --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-swing: cubic-bezier(0.45, 0, 0.55, 1);
+    --lx: 74%;            /* lantern light centre (x) */
+    --ly: 46%;            /* lantern light centre (y) */
+    position: relative;
     min-height: 100vh;
-    background: linear-gradient(160deg, var(--dark) 0%, #1e3d2a 50%, #2d6a4f 100%);
+    min-height: 100svh;
+    background: var(--hero-bg);
     display: flex;
-    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 120px 8% 80px;
-    position: relative;
+    padding: 0;
     overflow: hidden;
+    isolation: isolate;
+    color: #fff;
   }
-  /* Arabic calligraphy background layer */
-  .hero-calli-bg {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+
+  /* Star lattice, only visible where the lantern light falls */
+  .hero-pattern {
+    position: absolute; inset: 0; z-index: 0; pointer-events: none;
+    -webkit-mask-image: radial-gradient(circle at var(--lx) var(--ly), #000 0%, rgba(0,0,0,0.55) 22%, transparent 52%);
+            mask-image: radial-gradient(circle at var(--lx) var(--ly), #000 0%, rgba(0,0,0,0.55) 22%, transparent 52%);
+    animation: patternBreathe 6s var(--ease-swing) infinite alternate;
+  }
+  .hero-pattern svg { width: 100%; height: 100%; display: block; }
+
+  /* Rotating beams of light behind the lantern */
+  .hero-rays {
+    position: absolute; z-index: 0; pointer-events: none;
+    left: var(--lx); top: var(--ly);
+    width: 1500px; height: 1500px;
+    margin: -750px 0 0 -750px;
+    background: repeating-conic-gradient(from 0deg,
+      rgba(240, 196, 110, 0.11) 0deg 3deg,
+      transparent 3deg 14deg,
+      rgba(240, 196, 110, 0.06) 14deg 16deg,
+      transparent 16deg 30deg);
+    -webkit-mask-image: radial-gradient(circle, #000 4%, rgba(0,0,0,0.5) 22%, transparent 48%);
+            mask-image: radial-gradient(circle, #000 4%, rgba(0,0,0,0.5) 22%, transparent 48%);
+    animation: raysSpin 80s linear infinite;
+    will-change: transform;
+  }
+
+  /* Drifting gold motes */
+  .hero-motes { position: absolute; inset: 0; z-index: 1; pointer-events: none; width: 100%; height: 100%; }
+
+  /* Lantern rig: chain from the top edge, sways from the top */
+  .lantern-rig {
+    position: absolute; z-index: 2; top: 0;
+    left: var(--lx);
+    width: 240px; margin-left: -120px;
     pointer-events: none;
-    overflow: hidden;
   }
-  .hero-calli-bg .calli-main {
-    font-family: 'Amiri', serif;
-    font-size: clamp(10rem, 25vw, 22rem);
-    color: rgba(255,255,255,0.04);
-    line-height: 0.9;
-    user-select: none;
-    white-space: nowrap;
-    text-align: center;
-    letter-spacing: -0.02em;
+  .lantern-swing {
+    transform-origin: 50% 0;
+    animation: lanternSway 7s var(--ease-swing) infinite alternate;
+    will-change: transform;
   }
-  .hero-calli-bg .calli-top {
-    position: absolute;
-    top: 5%;
-    font-family: 'Amiri', serif;
-    font-size: clamp(4rem, 10vw, 9rem);
-    color: rgba(201,168,76,0.07);
-    user-select: none;
-    white-space: nowrap;
-  }
-  .hero-calli-bg .calli-bottom {
-    position: absolute;
-    bottom: 5%;
-    font-family: 'Amiri', serif;
-    font-size: clamp(3rem, 8vw, 7rem);
-    color: rgba(201,168,76,0.06);
-    user-select: none;
-    white-space: nowrap;
-  }
-  .hero-calli-bg .calli-left {
-    position: absolute;
-    left: -3%;
-    font-family: 'Amiri', serif;
-    font-size: clamp(5rem, 12vw, 11rem);
-    color: rgba(255,255,255,0.035);
-    user-select: none;
-    writing-mode: vertical-rl;
-  }
-  .hero-calli-bg .calli-right {
-    position: absolute;
-    right: -3%;
-    font-family: 'Amiri', serif;
-    font-size: clamp(5rem, 12vw, 11rem);
-    color: rgba(255,255,255,0.035);
-    user-select: none;
-    writing-mode: vertical-rl;
-  }
-  /* Radial glow overlay */
-  .hero::before {
-    content: '';
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    width: 700px; height: 700px;
-    background: radial-gradient(circle, rgba(45,106,79,0.35) 0%, transparent 70%);
+  .lantern-chain { display: block; width: 12px; height: 18vh; margin: 0 auto; }
+  .lantern-body { position: relative; }
+  .lantern-glow {
+    position: absolute; left: 50%; top: 52%;
+    width: 560px; height: 560px; margin: -280px 0 0 -280px;
     border-radius: 50%;
-    pointer-events: none;
+    background: radial-gradient(circle, rgba(255, 206, 120, 0.42) 0%, rgba(232, 170, 80, 0.16) 30%, rgba(232, 170, 80, 0) 66%);
+    animation: glowBreathe 4.2s var(--ease-swing) infinite alternate;
+    will-change: transform, opacity;
   }
-  /* Geometric corner ornaments */
-  .hero::after {
-    content: '';
-    position: absolute;
-    inset: 20px;
-    border: 1px solid rgba(201,168,76,0.15);
-    border-radius: 4px;
-    pointer-events: none;
+  .lantern-svg { position: relative; display: block; width: 100%; height: auto; overflow: visible; }
+  .lantern-svg .win-blur { opacity: 0.9; animation: flicker 2.6s var(--ease-swing) infinite; }
+  .lantern-svg .flame { transform-origin: 120px 262px; transform-box: view-box; animation: flame 1.8s var(--ease-swing) infinite alternate; }
+
+  /* Content */
+  .hero-inner {
+    position: relative; z-index: 3;
+    width: 100%; max-width: 1200px; margin: 0 auto;
+    padding: 128px 32px 160px;
   }
-  /* Ayah box */
-  .hero-ayah {
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(201,168,76,0.35);
-    border-radius: 20px;
-    padding: 1.75rem 2.5rem;
-    margin-bottom: 2.5rem;
-    max-width: 720px;
-    backdrop-filter: blur(8px);
-    position: relative;
+  .hero-content { max-width: 680px; text-align: left; }
+  .hero-content > * {
+    opacity: 0; transform: translateY(24px);
+    animation: heroRise 0.8s var(--ease-out) forwards;
   }
-  .hero-ayah::before, .hero-ayah::after {
-    content: '✦';
-    position: absolute;
-    color: var(--gold);
-    font-size: 0.8rem;
-    opacity: 0.6;
-  }
-  .hero-ayah::before { top: 12px; left: 16px; }
-  .hero-ayah::after  { bottom: 12px; right: 16px; }
-  .hero-ayah-arabic {
-    font-family: 'Amiri', serif;
-    font-size: clamp(1.3rem, 2.5vw, 1.9rem);
+  .hero-content > *:nth-child(1) { animation-delay: 0.10s; }
+  .hero-content > *:nth-child(2) { animation-delay: 0.18s; }
+  .hero-content > *:nth-child(3) { animation-delay: 0.26s; }
+  .hero-content > *:nth-child(4) { animation-delay: 0.34s; }
+  .hero-content > *:nth-child(5) { animation-delay: 0.42s; }
+
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 12px; line-height: 16px; font-weight: 700;
+    letter-spacing: 0.14em; text-transform: uppercase;
     color: var(--gold-light);
-    line-height: 2;
-    direction: rtl;
-    text-align: right;
-    margin-bottom: 0.85rem;
+    margin-bottom: 24px;
   }
-  .hero-ayah-divider {
-    width: 60px; height: 1px;
-    background: linear-gradient(90deg, transparent, var(--gold), transparent);
-    margin: 0 auto 0.85rem;
-  }
-  .hero-ayah-translation {
-    font-size: 0.92rem;
-    color: rgba(255,255,255,0.78);
-    font-style: italic;
-    line-height: 1.7;
-  }
-  .hero-ayah-ref {
-    margin-top: 0.6rem;
-    font-size: 0.78rem;
-    color: var(--gold);
-    font-weight: 700;
-    letter-spacing: 0.06em;
-  }
-  .hero-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: rgba(201,168,76,0.15);
-    border: 1px solid rgba(201,168,76,0.4);
-    border-radius: 50px;
-    padding: 0.35rem 1rem;
-    font-size: 0.8rem;
-    color: var(--gold-light);
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    margin-bottom: 1.25rem;
-    text-transform: uppercase;
-  }
-  .hero-badge::before { content: '✦'; }
+  .hero-eyebrow svg { width: 16px; height: 16px; flex-shrink: 0; }
+
   .hero h1 {
     font-family: 'Amiri', serif;
-    font-size: clamp(2.4rem, 5vw, 4rem);
-    color: #fff;
-    line-height: 1.2;
-    margin-bottom: 0.75rem;
-    text-shadow: 0 2px 20px rgba(0,0,0,0.3);
-  }
-  .hero h1 em {
-    font-style: normal;
-    color: var(--gold-light);
+    font-weight: 700;
+    font-size: 60px; line-height: 1.08;
+    letter-spacing: -0.01em;
+    margin: 0 0 24px;
+    padding-bottom: 4px;
+    text-wrap: balance;
+    background: linear-gradient(90deg, #ffffff 0%, #f3e6c4 55%, #cdb27a 100%);
+    -webkit-background-clip: text; background-clip: text;
+    color: transparent;
   }
   .hero-sub {
-    font-size: 1.1rem;
-    color: rgba(255,255,255,0.72);
-    margin-bottom: 2rem;
-    font-weight: 400;
+    max-width: 560px;
+    font-size: 18px; line-height: 28px; font-weight: 400;
+    color: rgba(255, 255, 255, 0.72);
+    margin: 0 0 32px;
+    text-wrap: pretty;
+  }
+
+  .hero-btns { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 40px; }
+  .hero-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 12px 24px;
+    border-radius: 9999px;
+    font-size: 16px; line-height: 24px; font-weight: 700;
+    text-decoration: none;
+    transition: transform 0.5s var(--ease-out), background-color 0.3s var(--ease-out), border-color 0.3s var(--ease-out), box-shadow 0.5s var(--ease-out);
+  }
+  .hero-btn svg { width: 18px; height: 18px; flex-shrink: 0; }
+  .hero-btn:focus-visible { outline: 2px solid var(--gold-light); outline-offset: 3px; }
+  .hero-btn:active { transform: scale(0.98); }
+  .hero-btn-primary {
+    background: var(--gold-light); color: #1a1406;
+    box-shadow: 0 0 0 rgba(232, 203, 122, 0);
+  }
+  .hero-btn-primary:hover { background: #f1d891; transform: translateY(-2px); box-shadow: 0 10px 32px rgba(232, 190, 100, 0.28); }
+  .hero-btn-primary svg { transition: transform 0.5s var(--ease-out); }
+  .hero-btn-primary:hover svg { transform: translateX(4px); }
+  .hero-btn-ghost {
+    color: #fff; background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.28);
+  }
+  .hero-btn-ghost:hover { border-color: rgba(255, 255, 255, 0.6); background: rgba(255, 255, 255, 0.08); transform: translateY(-2px); }
+
+  .hero-proof {
+    display: flex; flex-wrap: wrap;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    padding-top: 24px; gap: 0;
     max-width: 560px;
   }
-  .hero-highlights {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 0.6rem;
-    margin-bottom: 2.25rem;
-    max-width: 680px;
+  .hero-proof-item { padding-right: 32px; margin-right: 32px; border-right: 1px solid rgba(255, 255, 255, 0.12); }
+  .hero-proof-item:last-child { border-right: 0; margin-right: 0; padding-right: 0; }
+  .hero-proof-num { font-family: 'Amiri', serif; font-weight: 700; font-size: 30px; line-height: 36px; color: #fff; }
+  .hero-proof-lbl { font-size: 12px; line-height: 16px; font-weight: 600; color: rgba(255, 255, 255, 0.6); letter-spacing: 0.02em; }
+
+  /* Ayah card under the lantern */
+  .hero-ayah {
+    position: absolute; z-index: 3;
+    right: 120px; bottom: 112px;
+    width: 300px;
+    padding: 16px 24px;
+    border-radius: 16px;
+    background: rgba(11, 23, 17, 0.55);
+    border: 1px solid rgba(232, 203, 122, 0.22);
+    -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+    text-align: right;
+    opacity: 0; transform: translateY(24px);
+    animation: heroRise 0.8s var(--ease-out) 0.6s forwards;
   }
-  .highlight-pill {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.8rem;
-    color: rgba(255,255,255,0.85);
-    font-weight: 600;
-    background: rgba(255,255,255,0.08);
-    padding: 0.4rem 0.75rem;
-    border-radius: 50px;
-    border: 1px solid rgba(255,255,255,0.15);
-    backdrop-filter: blur(4px);
+  .hero-ayah-arabic { font-family: 'Amiri', serif; direction: rtl; font-size: 20px; line-height: 32px; color: var(--gold-light); }
+  .hero-ayah-translation { font-size: 14px; line-height: 20px; color: rgba(255, 255, 255, 0.72); text-align: left; margin-top: 8px; }
+  .hero-ayah-ref { font-size: 12px; line-height: 16px; font-weight: 700; color: rgba(232, 203, 122, 0.8); text-align: left; margin-top: 4px; letter-spacing: 0.04em; }
+
+  @keyframes heroRise { to { opacity: 1; transform: translateY(0); } }
+  @keyframes lanternSway { from { transform: rotate(-2.4deg); } to { transform: rotate(2.4deg); } }
+  @keyframes glowBreathe { from { opacity: 0.75; transform: scale(0.94); } to { opacity: 1; transform: scale(1.06); } }
+  @keyframes flicker { 0%, 100% { opacity: 0.9; } 22% { opacity: 0.7; } 41% { opacity: 1; } 63% { opacity: 0.78; } 80% { opacity: 0.95; } }
+  @keyframes flame { from { transform: scale(0.94, 0.9); } to { transform: scale(1.04, 1.08); } }
+  @keyframes raysSpin { to { transform: rotate(360deg); } }
+  @keyframes patternBreathe { from { opacity: 0.55; } to { opacity: 1; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-rays, .lantern-swing, .lantern-glow, .hero-pattern,
+    .lantern-svg .win-blur, .lantern-svg .flame { animation: none; }
+    .hero-content > *, .hero-ayah { animation: heroFade 0.4s linear forwards; transform: none; }
+    @keyframes heroFade { to { opacity: 1; } }
   }
-  .highlight-pill::before { content: '✓'; color: var(--gold); font-weight: 700; }
-  .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+
+  @media (max-width: 1100px) {
+    .hero { --lx: 78%; }
+    .hero-ayah { display: none; }
+  }
+  @media (max-width: 900px) {
+    .hero { --lx: 50%; --ly: 170px; align-items: flex-start; }
+    .lantern-rig { width: 120px; margin-left: -60px; }
+    .lantern-chain { height: 48px; }
+    .lantern-glow { width: 360px; height: 360px; margin: -180px 0 0 -180px; }
+    .hero-rays { width: 900px; height: 900px; margin: -450px 0 0 -450px; }
+    .hero-inner { padding: 320px 24px 112px; }
+    .hero-content { margin: 0 auto; text-align: center; }
+    .hero-eyebrow { justify-content: center; }
+    .hero-sub { margin-left: auto; margin-right: auto; }
+    .hero-btns { justify-content: center; }
+    .hero-proof { justify-content: center; margin: 0 auto; }
+  }
+  @media (max-width: 600px) {
+    .hero h1 { font-size: 36px; line-height: 40px; }
+    .hero-sub { font-size: 16px; line-height: 24px; }
+    .hero-proof-item { padding-right: 16px; margin-right: 16px; }
+    .hero-proof-num { font-size: 24px; line-height: 32px; }
+    .hero-btn { flex: 1 1 100%; justify-content: center; }
+  }
+
   .btn-primary {
     display: inline-flex; align-items: center; gap: 0.5rem;
     background: var(--soft-green);
@@ -931,9 +952,6 @@
 
   /* RESPONSIVE */
   @media (max-width: 900px) {
-    .hero { padding: 100px 5% 60px; }
-    .hero-highlights { grid-template-columns: 1fr 1fr; max-width: 460px; margin: 0 auto 2rem; }
-    .hero-ayah { padding: 1.25rem 1.5rem; }
     .about-grid { grid-template-columns: 1fr; }
     .teacher-grid { grid-template-columns: 1fr; }
     .teacher-img-wrap { max-width: 350px; margin: 0 auto; }
@@ -947,14 +965,295 @@
   }
   @media (max-width: 600px) {
     section { padding: 60px 5%; }
-    .hero { padding: 90px 5% 50px; }
-    .hero h1 { font-size: 2rem; }
-    .hero-highlights { grid-template-columns: 1fr; }
     .stats-bar { grid-template-columns: 1fr 1fr; padding: 1.25rem 5%; }
     nav { padding: 0 5%; }
     .nav-logo { font-size: 1rem; }
-    .hero-ayah { padding: 1rem 1.25rem; }
-    .hero-ayah-arabic { font-size: 1.2rem; }
+  }
+
+  /* ==========================================================
+     NOOR GLASS THEME — site wide design language
+     Deep green night, lantern gold light, frosted glass surfaces
+     ========================================================== */
+  :root {
+    --night: #0b1711;
+    --night-2: #0e1d15;
+    --cream: #0b1711;
+    --warm-white: #0b1711;
+    --beige: rgba(255,255,255,0.14);
+    --pale-green: rgba(82,183,136,0.14);
+    --light-green: rgba(183,228,199,0.28);
+    --gold-pale: rgba(232,203,122,0.05);
+    --soft-green: #74c69d;
+    --mid-green: #52b788;
+    --dark: #ffffff;
+    --text: rgba(255,255,255,0.8);
+    --text-light: rgba(255,255,255,0.6);
+    --border: rgba(255,255,255,0.1);
+    --glass-bg: rgba(255,255,255,0.045);
+    --glass-bg-strong: rgba(14,29,21,0.62);
+    --glass-border: rgba(255,255,255,0.1);
+    --glass-border-hover: rgba(232,203,122,0.38);
+    --glass-blur: blur(18px) saturate(140%);
+    --glass-shadow: inset 0 1px 0 rgba(255,255,255,0.07), 0 20px 48px rgba(0,0,0,0.28);
+    --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  body { background: var(--night); color: var(--text); }
+  ::selection { background: rgba(232,203,122,0.35); color: #fff; }
+
+  /* Ambient light behind every glass surface */
+  body::before {
+    content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    background:
+      radial-gradient(40vw 40vw at 85% 15%, rgba(232,180,90,0.10), transparent 70%),
+      radial-gradient(45vw 45vw at 8% 70%, rgba(64,145,108,0.16), transparent 70%),
+      radial-gradient(30vw 30vw at 60% 95%, rgba(232,180,90,0.07), transparent 70%);
+  }
+  body::after {
+    content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: 0.35;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72'%3E%3Cg fill='none' stroke='%23e8cb7a' stroke-width='1' stroke-opacity='0.12'%3E%3Cpath d='M18 18H54V54H18Z'/%3E%3Cpath d='M36 10.5L61.5 36L36 61.5L10.5 36Z'/%3E%3Ccircle cx='36' cy='36' r='7'/%3E%3Cpath d='M61.5 36H72M0 36H10.5M36 0V10.5M36 61.5V72'/%3E%3C/g%3E%3C/svg%3E");
+    -webkit-mask-image: linear-gradient(180deg, transparent, #000 30%, #000 70%, transparent);
+            mask-image: linear-gradient(180deg, transparent, #000 30%, #000 70%, transparent);
+  }
+
+  /* Reusable glass surface */
+  .about-point, .about-img, .qual, .why-card, .review-card, .video-card, .region-card,
+  .faq-item, .reg-form, .stats-bar, .course-card, .contact-panel, .teacher-img, .footer-inner {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+    box-shadow: var(--glass-shadow);
+  }
+
+  /* ---------- Floating glass navbar ---------- */
+  nav, nav.scrolled {
+    top: 12px; left: 50%; right: auto;
+    width: calc(100% - 32px); max-width: 1160px;
+    transform: translateX(-50%);
+    height: 64px;
+    padding: 0 12px 0 24px;
+    border-radius: 9999px;
+    background: rgba(11,23,17,0.42);
+    border: 1px solid rgba(255,255,255,0.12);
+    -webkit-backdrop-filter: blur(18px) saturate(150%); backdrop-filter: blur(18px) saturate(150%);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 10px 30px rgba(0,0,0,0.25);
+    transition: background-color 0.3s var(--ease-out), box-shadow 0.5s var(--ease-out), height 0.5s var(--ease-out), border-color 0.3s var(--ease-out);
+  }
+  nav.scrolled { height: 56px; top: 8px; background: rgba(11,23,17,0.72); border-color: rgba(232,203,122,0.18); box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 14px 40px rgba(0,0,0,0.4); }
+  .nav-logo { color: #fff; }
+  .nav-links { gap: 4px; }
+  .nav-links a {
+    display: block; padding: 8px 16px; border-radius: 9999px;
+    color: rgba(255,255,255,0.75); font-size: 14px; line-height: 20px; font-weight: 600;
+    transition: color 0.3s var(--ease-out), background-color 0.3s var(--ease-out);
+  }
+  .nav-links a:hover { color: #fff; background: rgba(255,255,255,0.08); }
+  .nav-links a.active { color: #fff; background: rgba(232,203,122,0.14); box-shadow: inset 0 0 0 1px rgba(232,203,122,0.3); }
+  .nav-links a:focus-visible, .nav-cta:focus-visible, .hamburger:focus-visible { outline: 2px solid var(--gold-light); outline-offset: 2px; }
+  .nav-cta {
+    background: var(--gold-light); color: #1a1406; border: 0;
+    padding: 8px 20px; font-size: 14px; line-height: 20px; font-weight: 700;
+    transition: background-color 0.3s var(--ease-out), transform 0.5s var(--ease-out), box-shadow 0.5s var(--ease-out);
+  }
+  .nav-cta:hover { background: #f1d891; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(232,190,100,0.3); }
+  .nav-cta:active { transform: scale(0.98); }
+  .hamburger { width: 44px; height: 44px; align-items: center; justify-content: center; border-radius: 9999px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); }
+  .hamburger span { background: #fff; width: 18px; transition: transform 0.5s var(--ease-out), opacity 0.3s var(--ease-out); }
+
+  /* Mobile menu: floating glass panel, links arrive one by one */
+  .mobile-nav {
+    top: 84px; left: 16px; right: 16px;
+    padding: 12px; gap: 4px;
+    border-radius: 24px;
+    background: rgba(11,23,17,0.85);
+    border: 1px solid rgba(255,255,255,0.12);
+    -webkit-backdrop-filter: blur(24px) saturate(150%); backdrop-filter: blur(24px) saturate(150%);
+    box-shadow: 0 24px 60px rgba(0,0,0,0.45);
+    transform: translateY(-8px) scale(0.98); transform-origin: top center;
+    transition: opacity 0.3s var(--ease-out), transform 0.5s var(--ease-out);
+  }
+  .mobile-nav.open { transform: none; }
+  .mobile-nav a {
+    color: rgba(255,255,255,0.85); border: 0; border-radius: 16px;
+    padding: 12px 16px; font-size: 16px; line-height: 24px;
+    opacity: 0; transform: translateY(24px);
+    transition: opacity 0.5s var(--ease-out), transform 0.5s var(--ease-out), background-color 0.3s var(--ease-out);
+  }
+  .mobile-nav a:hover { background: rgba(255,255,255,0.06); color: #fff; }
+  .mobile-nav.open a { opacity: 1; transform: none; }
+  .mobile-nav.open a:nth-child(1) { transition-delay: 0ms; }
+  .mobile-nav.open a:nth-child(2) { transition-delay: 60ms; }
+  .mobile-nav.open a:nth-child(3) { transition-delay: 120ms; }
+  .mobile-nav.open a:nth-child(4) { transition-delay: 180ms; }
+  .mobile-nav.open a:nth-child(5) { transition-delay: 240ms; }
+  .mobile-nav.open a:nth-child(6) { transition-delay: 300ms; }
+  .mobile-nav a.nav-cta { color: #1a1406; margin-top: 8px; }
+  .mobile-nav a.nav-cta:hover { background: #f1d891; }
+
+  /* ---------- Shared type + buttons ---------- */
+  .section-eyebrow,
+  .register .section-eyebrow, .why .section-eyebrow, .reviews .section-eyebrow, .about .section-eyebrow { color: var(--gold-light); }
+  .section-title, .teacher-name {
+    background: linear-gradient(90deg, #ffffff 0%, #f3e6c4 60%, #cdb27a 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    text-wrap: balance;
+  }
+  .section-title em { color: inherit; font-style: normal; }
+  .section-desc, .courses-sub, .world-sub { color: var(--text-light); text-wrap: pretty; }
+  .sec-ar, .reviews .sec-ar, .world .sec-ar, .faq .sec-ar { color: var(--gold-light); opacity: 0.85; }
+
+  .btn-primary, .contact .btn-primary {
+    background: var(--gold-light); color: #1a1406;
+    box-shadow: 0 0 0 rgba(0,0,0,0);
+    transition: transform 0.5s var(--ease-out), background-color 0.3s var(--ease-out), box-shadow 0.5s var(--ease-out);
+  }
+  .btn-primary:hover, .contact .btn-primary:hover { background: #f1d891; transform: translateY(-2px); box-shadow: 0 10px 32px rgba(232,190,100,0.28); }
+  .btn-wa { transition: transform 0.5s var(--ease-out), background-color 0.3s var(--ease-out), box-shadow 0.5s var(--ease-out); }
+  .btn-primary:active, .btn-wa:active { transform: scale(0.98); }
+  .btn-primary:focus-visible, .btn-wa:focus-visible { outline: 2px solid var(--gold-light); outline-offset: 3px; }
+
+  /* Sections sit on the shared night background */
+  section { background: transparent; }
+  .about, .courses, .teacher, .why, .reviews, .world, .faq, .contact, .register { background: transparent; border-top: 0; }
+  .why::before, .reviews::before, .courses::before, .courses::after { display: none; }
+  .world, .faq, .register { border-top: 0; }
+
+  /* Stats: glass panel overlapping the hero */
+  .hero-band { display: none; }
+  .stats-bar {
+    position: relative; z-index: 5;
+    max-width: 1100px; margin: -72px auto 0; width: calc(100% - 48px);
+    padding: 24px 32px; border-radius: 24px;
+    background: rgba(14,29,21,0.55);
+    border-bottom: 1px solid var(--glass-border);
+  }
+  .stat + .stat::before { width: 1px; height: 40px; border: 0; background: rgba(255,255,255,0.12); transform: translate(-50%,-50%); opacity: 1; }
+  .stat-lbl { color: rgba(255,255,255,0.62); }
+
+  /* About */
+  .about-img { border-radius: 32px; padding: 8px; }
+  .about-img img { border-radius: 24px; }
+  .about-deco { border-color: rgba(232,203,122,0.25); border-radius: 32px; }
+  .about-point { border-radius: 20px; border-left: 1px solid var(--glass-border); transition: transform 0.5s var(--ease-out), border-color 0.3s var(--ease-out); }
+  .about-point:hover { transform: translateX(4px); border-color: var(--glass-border-hover); }
+
+  /* Courses: glass arches */
+  .course-card {
+    background: rgba(255,255,255,0.05);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), inset 0 0 0 7px rgba(255,255,255,0.015), 0 20px 48px rgba(0,0,0,0.3);
+    transition: transform 0.5s var(--ease-out), border-color 0.3s var(--ease-out), box-shadow 0.5s var(--ease-out);
+  }
+  .course-card:hover {
+    transform: translateY(-8px); border-color: var(--glass-border-hover);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 28px 60px rgba(0,0,0,0.4), 0 0 40px rgba(232,190,100,0.12);
+  }
+  .course-title { color: #fff; }
+  .course-desc { color: var(--text-light); }
+  .course-tag { color: var(--gold-light); background: rgba(232,203,122,0.08); border-color: rgba(232,203,122,0.3); }
+
+  /* Teacher */
+  .teacher-img { border-radius: 32px 32px 120px 32px; padding: 8px; }
+  .teacher-img img { border-radius: 24px 24px 112px 24px; }
+  .teacher-badge-wrap { background: var(--gold-light); color: #1a1406; border-radius: 16px; box-shadow: 0 12px 32px rgba(232,190,100,0.3); }
+  .qual { border-radius: 16px; transition: border-color 0.3s var(--ease-out), transform 0.5s var(--ease-out); }
+  .qual:hover { border-color: var(--glass-border-hover); transform: translateX(4px); }
+
+  /* Why */
+  .why-card { border-radius: 24px; transition: transform 0.5s var(--ease-out), border-color 0.3s var(--ease-out), box-shadow 0.5s var(--ease-out); }
+  .why-card::before, .why-card::after { border-color: rgba(232,203,122,0.55); }
+  .why-card::before { border-top-left-radius: 14px; }
+  .why-card::after { border-bottom-right-radius: 14px; }
+  .why-card:hover { transform: translateY(-6px); border-color: var(--glass-border-hover); box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 28px 60px rgba(0,0,0,0.35); }
+  .why-wm { color: var(--gold-light); opacity: 0.06; }
+  .why-icon { color: #1a1406; background: var(--gold-light); clip-path: none; border-radius: 16px; box-shadow: 0 8px 24px rgba(232,190,100,0.25); }
+
+  /* Reviews + videos */
+  .review-card { border-radius: 24px; transition: transform 0.5s var(--ease-out), border-color 0.3s var(--ease-out); }
+  .review-card:hover { transform: translateY(-4px); border-color: var(--glass-border-hover); }
+  .review-card::before { display: none; }
+  .review-author { border-top: 1px solid rgba(255,255,255,0.1); }
+  .review-avatar { background: var(--gold-light); color: #1a1406; }
+  .review-loc { color: var(--text-light); }
+  .videos-title { color: #fff; }
+  .video-card { border-radius: 24px; outline: 0; }
+  .yt-lite, .video-card iframe { border-radius: 16px; }
+  .video-label::before { color: #1a1406; }
+
+  /* Worldwide */
+  .region-card { border-radius: 24px; transition: transform 0.5s var(--ease-out), border-color 0.3s var(--ease-out), box-shadow 0.5s var(--ease-out); }
+  .region-card:hover { transform: translateY(-4px); border-color: var(--glass-border-hover); box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 24px 48px rgba(0,0,0,0.35); }
+  .region-card::before { background: var(--gold-light); opacity: 0.9; }
+  .region-tz { color: var(--gold-light); background: rgba(232,203,122,0.1); }
+
+  /* FAQ */
+  .faq-item { border-radius: 20px; transition: border-color 0.3s var(--ease-out), background-color 0.3s var(--ease-out); }
+  .faq-item[open] { border-color: var(--glass-border-hover); background: rgba(255,255,255,0.07); box-shadow: var(--glass-shadow); }
+  .faq-item summary::before { background: rgba(232,203,122,0.14); box-shadow: inset 0 0 0 1px rgba(232,203,122,0.35); }
+  .faq-item summary::after { transition: transform 0.5s var(--ease-out); }
+  .faq-item summary:focus-visible { outline: 2px solid var(--gold-light); outline-offset: -2px; border-radius: 20px; }
+
+  /* Contact */
+  .contact-panel {
+    background: rgba(14,29,21,0.5);
+    border-color: rgba(232,203,122,0.25);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 30px 70px rgba(0,0,0,0.4), 0 0 80px rgba(232,190,100,0.08);
+  }
+  .contact .section-title { color: transparent; }
+  .contact-wa-box { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.16); }
+
+  /* Registration form */
+  .reg-form { border-radius: 32px; padding: 40px; }
+  .reg-input, .reg-select {
+    background-color: rgba(255,255,255,0.04); color: #fff;
+    border: 1px solid rgba(255,255,255,0.14); border-radius: 14px;
+    transition: border-color 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out), background-color 0.3s var(--ease-out);
+  }
+  .reg-input::placeholder { color: rgba(255,255,255,0.38); }
+  .reg-input:focus, .reg-select:focus, .multi-box:focus-within {
+    background-color: rgba(255,255,255,0.07); border-color: rgba(232,203,122,0.6);
+    box-shadow: 0 0 0 3px rgba(232,203,122,0.15);
+  }
+  .reg-select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23e8cb7a' stroke-width='2' fill='none'/%3E%3C/svg%3E");
+  }
+  .reg-select option { background: #0e1d15; color: #fff; }
+  .reg-input.invalid, .reg-select.invalid { border-color: #ff8a7a; }
+  .reg-err, .reg-field .req { color: #ff9b8c; }
+  .reg-group { background: rgba(255,255,255,0.025); border: 1px dashed rgba(232,203,122,0.25); border-radius: 20px; }
+  .reg-radios label { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.14); color: rgba(255,255,255,0.85); transition: border-color 0.3s var(--ease-out), background-color 0.3s var(--ease-out); }
+  .reg-radios label:has(input:checked) { border-color: rgba(232,203,122,0.6); background: rgba(232,203,122,0.12); color: #fff; }
+  .reg-radios input, .reg-check input { accent-color: var(--gold-light); }
+  .combo-list { background: rgba(14,29,21,0.94); border: 1px solid rgba(255,255,255,0.12); -webkit-backdrop-filter: blur(20px); backdrop-filter: blur(20px); box-shadow: 0 20px 48px rgba(0,0,0,0.5); border-radius: 16px; }
+  .combo-list li { color: rgba(255,255,255,0.85); border-radius: 10px; }
+  .combo-list li.active, .combo-list li:hover { background: rgba(232,203,122,0.12); color: #fff; }
+  .chip { background: rgba(232,203,122,0.12); color: var(--gold-light); border-color: rgba(232,203,122,0.3); }
+  .chip button { background: rgba(232,203,122,0.18); color: var(--gold-light); }
+  .multi-box input { color: #fff; }
+  .combo.multi li[data-i]::before { background: transparent; border-color: rgba(232,203,122,0.6); }
+  .combo.multi li.checked::before { background: var(--gold-light); color: #1a1406; }
+  .reg-done { background: rgba(82,183,136,0.12); border-color: rgba(82,183,136,0.35); color: #b7e4c7; }
+
+  /* Footer */
+  footer { background: transparent; padding: 0 16px 16px; }
+  .footer-inner { max-width: 1200px; margin: 0 auto; border-radius: 32px; padding: 48px 40px 24px; background: rgba(255,255,255,0.03); }
+  .footer-links a { transition: color 0.3s var(--ease-out); }
+
+  /* Scroll reveal on the base curve */
+  .fade-in { transform: translateY(32px); transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out); }
+
+  @media (max-width: 900px) {
+    nav, nav.scrolled { padding: 0 8px 0 20px; }
+    .stats-bar { margin-top: -48px; padding: 16px; }
+    .stat:nth-child(3)::before { display: none; }
+  }
+  @media (max-width: 600px) {
+    nav .nav-cta { display: none; }
+    .mobile-nav a.nav-cta { display: block; }
+    .reg-form { padding: 24px 16px; border-radius: 24px; }
+    .footer-inner { padding: 40px 24px 24px; border-radius: 24px; }
+    .stats-bar { width: calc(100% - 32px); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .fade-in, .mobile-nav a { transform: none !important; transition: opacity 0.3s linear; }
   }
 </style>
 </head>
@@ -990,48 +1289,136 @@
 </div>
 
 <!-- HERO -->
-<section class="hero" id="home">
+<section class="hero" id="home" aria-labelledby="hero-title">
 
-  <!-- Calligraphy background layers -->
-  <div class="hero-calli-bg">
-    <div class="calli-top">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
-    <div class="calli-main">اقْرَأْ</div>
-    <div class="calli-left">الْقُرْآنُ</div>
-    <div class="calli-right">الْعِلْمُ</div>
-    <div class="calli-bottom">وَعَلَّمَ الْإِنسَانَ مَا لَمْ يَعْلَمْ</div>
+  <!-- Geometric lattice lit by the lantern -->
+  <div class="hero-pattern" aria-hidden="true">
+    <svg xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <pattern id="heroStar" width="72" height="72" patternUnits="userSpaceOnUse">
+          <g fill="none" stroke="#e8cb7a" stroke-width="1" stroke-opacity="0.5">
+            <path d="M18 18H54V54H18Z"/>
+            <path d="M36 10.5L61.5 36L36 61.5L10.5 36Z"/>
+            <circle cx="36" cy="36" r="7"/>
+            <path d="M61.5 36H72M0 36H10.5M36 0V10.5M36 61.5V72"/>
+          </g>
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#heroStar)"/>
+    </svg>
   </div>
 
-  <!-- Content -->
-  <div class="hero-content fade-in visible" style="position:relative; z-index:2; display:flex; flex-direction:column; align-items:center;">
-    <div class="hero-badge">Trusted Since 10+ Years</div>
-    <h1>Bait ul <em>Izzah</em><br>Quran Academy</h1>
-    <p class="hero-sub">Online Quran and Islamic Studies classes for women and children — one-to-one on Zoom with a qualified female teacher, taught with love, patience, and proper Tajweed. Classes are available worldwide — UAE, Saudi Arabia, Qatar, the UK, Europe, USA, Canada, Australia and Pakistan.</p>
+  <div class="hero-rays" aria-hidden="true"></div>
+  <canvas class="hero-motes" id="heroMotes" aria-hidden="true"></canvas>
 
-    <!-- Quranic Ayah -->
-    <div class="hero-ayah fade-in visible">
-      <div class="hero-ayah-arabic">
-        عَلَّمَ بِالْقَلَمِ ۞ عَلَّمَ الْإِنسَانَ مَا لَمْ يَعْلَمْ
-      </div>
-      <div class="hero-ayah-divider"></div>
-      <div class="hero-ayah-translation">
-        "He taught by the pen — He taught mankind what it knew not."
-      </div>
-      <div class="hero-ayah-ref">— Surah Al-'Alaq, 96:4–5</div>
-    </div>
+  <!-- Hanging lantern -->
+  <div class="lantern-rig" aria-hidden="true">
+    <div class="lantern-swing">
+      <svg class="lantern-chain" viewBox="0 0 12 100" preserveAspectRatio="xMidYMax slice">
+        <defs>
+          <pattern id="chainLink" width="12" height="14" patternUnits="userSpaceOnUse">
+            <ellipse cx="6" cy="7" rx="3.2" ry="6" fill="none" stroke="#c9a84c" stroke-width="1.6"/>
+          </pattern>
+        </defs>
+        <rect width="12" height="100%" fill="url(#chainLink)"/>
+      </svg>
+      <div class="lantern-body">
+        <div class="lantern-glow"></div>
+        <svg class="lantern-svg" viewBox="0 0 240 420">
+          <defs>
+            <radialGradient id="lampLight" cx="50%" cy="58%" r="60%">
+              <stop offset="0" stop-color="#fff6d6"/>
+              <stop offset="0.35" stop-color="#ffd27a"/>
+              <stop offset="0.75" stop-color="#e59a3a"/>
+              <stop offset="1" stop-color="#9a5a1c"/>
+            </radialGradient>
+            <linearGradient id="lampMetal" x1="0" x2="1">
+              <stop offset="0" stop-color="#6e5220"/>
+              <stop offset="0.5" stop-color="#d9b45e"/>
+              <stop offset="1" stop-color="#5c4419"/>
+            </linearGradient>
+            <pattern id="lampLattice" width="14" height="14" patternUnits="userSpaceOnUse">
+              <g fill="none" stroke="#3a2608" stroke-width="1.3" stroke-opacity="0.7">
+                <path d="M3.5 3.5H10.5V10.5H3.5Z"/>
+                <path d="M7 2L12 7L7 12L2 7Z"/>
+              </g>
+            </pattern>
+            <clipPath id="lampWindows">
+              <path d="M100 252 L100 148 Q100 124 120 112 Q140 124 140 148 L140 252 Z"/>
+              <path d="M82 248 L84 154 Q86 134 95 126 L95 250 Z"/>
+              <path d="M158 248 L156 154 Q154 134 145 126 L145 250 Z"/>
+            </clipPath>
+            <filter id="lampBlur" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur stdDeviation="9"/>
+            </filter>
+          </defs>
 
-    <div class="hero-highlights">
-      <div class="highlight-pill">10+ Years Experience</div>
-      <div class="highlight-pill">500+ Students</div>
-      <div class="highlight-pill">1-to-1 Zoom Classes</div>
-      <div class="highlight-pill">Flexible Timings</div>
-      <div class="highlight-pill">Pakistan &amp; Worldwide</div>
-      <div class="highlight-pill">Female Teachers Only</div>
-    </div>
-    <div class="hero-btns">
-      <a href="#register" class="btn-primary"><svg class="i" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4h6v3H9z"/><path d="M15 5h2a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2"/><path d="M9 12h6M9 16h4"/></svg> Join Classes</a>
-      <a href="https://wa.me/923167959923" target="_blank" rel="noopener" class="btn-wa"><svg class="i" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 2.9 2.9 0 0 0-.9 2.2 5 5 0 0 0 1.1 2.7 11.5 11.5 0 0 0 4.4 3.9c1.6.7 2.3.8 3.1.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .1-1.2c0-.1-.2-.2-.4-.3z"/></svg> WhatsApp Inquiry</a>
+          <!-- top ring + finial -->
+          <circle cx="120" cy="8" r="7" fill="none" stroke="#c9a84c" stroke-width="2.4"/>
+          <path d="M120 15 C129 25 129 35 120 40 C111 35 111 25 120 15Z" fill="url(#lampMetal)"/>
+          <!-- dome -->
+          <path d="M76 88 C78 62 98 44 120 40 C142 44 162 62 164 88 Z" fill="url(#lampMetal)"/>
+          <path d="M92 86 C95 70 106 58 120 54 C134 58 145 70 148 86" fill="none" stroke="#3a2608" stroke-opacity="0.45" stroke-width="1.2"/>
+          <rect x="68" y="86" width="104" height="14" rx="3" fill="url(#lampMetal)"/>
+
+          <!-- body frame -->
+          <path d="M72 100 H168 L158 266 H82 Z" fill="#2a1d08"/>
+
+          <!-- glowing windows (blurred halo + crisp) -->
+          <g class="win-blur" filter="url(#lampBlur)">
+            <rect x="70" y="100" width="100" height="166" fill="url(#lampLight)" clip-path="url(#lampWindows)"/>
+          </g>
+          <g clip-path="url(#lampWindows)">
+            <rect x="70" y="100" width="100" height="166" fill="url(#lampLight)"/>
+            <path class="flame" d="M120 214 C108 202 110 186 120 170 C130 186 132 202 120 214Z" fill="#fffbe9" opacity="0.95"/>
+            <rect x="70" y="100" width="100" height="166" fill="url(#lampLattice)"/>
+          </g>
+          <!-- window frames -->
+          <g fill="none" stroke="#d9b45e" stroke-width="2">
+            <path d="M100 252 L100 148 Q100 124 120 112 Q140 124 140 148 L140 252 Z"/>
+            <path d="M82 248 L84 154 Q86 134 95 126 L95 250"/>
+            <path d="M158 248 L156 154 Q154 134 145 126 L145 250"/>
+          </g>
+          <path d="M72 100 L82 266 M168 100 L158 266" stroke="#d9b45e" stroke-width="2.4"/>
+
+          <!-- base -->
+          <rect x="76" y="264" width="88" height="14" rx="3" fill="url(#lampMetal)"/>
+          <path d="M80 278 H160 C156 302 138 318 120 326 C102 318 84 302 80 278Z" fill="url(#lampMetal)"/>
+          <path d="M120 326 V346" stroke="#c9a84c" stroke-width="2"/>
+          <circle cx="120" cy="350" r="5" fill="#d9b45e"/>
+          <path d="M116 354 L112 390 M120 355 V394 M124 354 L128 390" stroke="#c9a84c" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+      </div>
     </div>
   </div>
+
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-eyebrow">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 6h12v12H6z"/><path d="M12 3.5 20.5 12 12 20.5 3.5 12z"/></svg>
+        Bait ul Izzah Quran Academy
+      </div>
+      <h1 id="hero-title">Recite the Quran<br>beautifully, at home</h1>
+      <p class="hero-sub">Online Quran and Islamic Studies classes for women and children. One to one on Zoom with a qualified female teacher, with proper Tajweed and timings that fit your family, wherever you live.</p>
+      <div class="hero-btns">
+        <a href="#register" class="hero-btn hero-btn-primary">Book a free trial class
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <a href="https://wa.me/923167959923" target="_blank" rel="noopener" class="hero-btn hero-btn-ghost">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 2.9 2.9 0 0 0-.9 2.2 5 5 0 0 0 1.1 2.7 11.5 11.5 0 0 0 4.4 3.9c1.6.7 2.3.8 3.1.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .1-1.2c0-.1-.2-.2-.4-.3z"/></svg>
+          Ask on WhatsApp
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <figure class="hero-ayah">
+    <div class="hero-ayah-arabic" lang="ar">عَلَّمَ بِالْقَلَمِ ۞ عَلَّمَ الْإِنسَانَ مَا لَمْ يَعْلَمْ</div>
+    <figcaption>
+      <div class="hero-ayah-translation">He taught by the pen, taught mankind what it knew not.</div>
+      <div class="hero-ayah-ref">Surah Al 'Alaq 96:4 to 5</div>
+    </figcaption>
+  </figure>
 
 </section>
 <div class="hero-band" aria-hidden="true"></div>
@@ -1569,6 +1956,7 @@
 
 <!-- FOOTER -->
 <footer>
+<div class="footer-inner">
   <div class="footer-grid">
     <div>
       <div class="footer-brand-name">Bait ul Izzah Quran Academy</div>
@@ -1602,6 +1990,7 @@
     <span>© 2026 Bait ul Izzah Quran Academy. All rights reserved. · Last updated <time datetime="2026-10-04">October 2026</time></span>
     <span>Made with ❤️ for the Ummah · We record anonymous visit statistics (country &amp; city only)</span>
   </div>
+</div>
 </footer>
 
 <!-- FLOATING WHATSAPP -->
@@ -2010,6 +2399,93 @@ document.querySelectorAll('.yt-lite').forEach(btn => btn.addEventListener('click
   }
   const start = () => ('requestIdleCallback' in window) ? requestIdleCallback(send, { timeout: 4000 }) : setTimeout(send, 2500);
   if (document.readyState === 'complete') start(); else window.addEventListener('load', start);
+})();
+
+// Hero: drifting light motes around the lantern (loops, pauses off screen)
+(function () {
+  const hero = document.getElementById('home');
+  const canvas = document.getElementById('heroMotes');
+  if (!hero || !canvas || !canvas.getContext) return;
+  const lamp = hero.querySelector('.lantern-svg');
+  const ctx = canvas.getContext('2d');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let w = 0, h = 0, dpr = 1, cx = 0, cy = 0, motes = [], running = false, raf = 0;
+
+  function measure() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const r = hero.getBoundingClientRect();
+    w = r.width; h = r.height;
+    canvas.width = w * dpr; canvas.height = h * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (lamp) {
+      const l = lamp.getBoundingClientRect();
+      cx = l.left - r.left + l.width / 2;
+      cy = l.top - r.top + l.height * 0.45;
+    }
+  }
+  function spawn(initial) {
+    const spread = Math.max(140, Math.min(w, h) * 0.32);
+    return {
+      x: cx + (Math.random() - 0.5) * spread * 1.6,
+      y: initial ? cy + (Math.random() - 0.3) * spread * 1.6 : cy + spread * (0.4 + Math.random() * 0.6),
+      r: 0.6 + Math.random() * 1.8,
+      vy: 0.12 + Math.random() * 0.35,
+      drift: Math.random() * Math.PI * 2,
+      life: 0,
+      max: 380 + Math.random() * 420
+    };
+  }
+  function init() {
+    measure();
+    const count = w < 600 ? 34 : 70;
+    motes = Array.from({ length: count }, () => { const m = spawn(true); m.life = Math.random() * m.max; return m; });
+  }
+  function draw() {
+    ctx.clearRect(0, 0, w, h);
+    for (const m of motes) {
+      if (!reduce) {
+        m.life++; m.drift += 0.012;
+        m.y -= m.vy; m.x += Math.sin(m.drift) * 0.25;
+        if (m.life > m.max) Object.assign(m, spawn(false));
+      }
+      const t = m.life / m.max;
+      const fade = Math.sin(Math.PI * Math.min(1, Math.max(0, t)));
+      const dist = Math.hypot(m.x - cx, m.y - cy);
+      const near = Math.max(0, 1 - dist / (Math.min(w, h) * 0.75));
+      ctx.globalAlpha = fade * (0.25 + near * 0.75);
+      ctx.fillStyle = '#ffd98a';
+      ctx.shadowColor = 'rgba(255, 200, 110, 0.9)';
+      ctx.shadowBlur = 8;
+      ctx.beginPath(); ctx.arc(m.x, m.y, m.r, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+    if (running && !reduce) raf = requestAnimationFrame(draw);
+  }
+  function start() { if (!running) { running = true; raf = requestAnimationFrame(draw); } }
+  function stop() { running = false; cancelAnimationFrame(raf); }
+
+  init();
+  let rt;
+  window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { measure(); }, 150); }, { passive: true });
+  if (reduce) { draw(); return; }
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(es => es.forEach(e => e.isIntersecting ? start() : stop()), { threshold: 0 }).observe(hero);
+  } else { start(); }
+  document.addEventListener('visibilitychange', () => document.hidden ? stop() : start());
+})();
+
+// Make sure the nav state is right if the page loads already scrolled
+if (window.scrollY > 40) document.querySelector('nav').classList.add('scrolled');
+
+// Highlight the current section in the floating nav
+(function () {
+  const links = [...document.querySelectorAll('.nav-links a[href^="#"]')];
+  const map = new Map(links.map(a => [a.getAttribute('href').slice(1), a]));
+  if (!('IntersectionObserver' in window)) return;
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) { links.forEach(l => l.classList.remove('active')); const a = map.get(e.target.id); if (a) a.classList.add('active'); }
+  }), { rootMargin: '-45% 0px -50% 0px' });
+  map.forEach((a, id) => { const el = document.getElementById(id); if (el) io.observe(el); });
 })();
 </script>
 
