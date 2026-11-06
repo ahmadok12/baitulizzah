@@ -11,7 +11,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&text=%D9%88%D9%8E%D8%B1%D9%8E%D8%AA%D9%90%D9%91%D9%84%D9%90%20%D8%A7%D9%84%D9%92%D9%82%D9%8F%D8%B1%D9%92%D8%A2%D9%86%D9%8E%20%D8%AA%D9%8E%D8%B1%D9%92%D8%AA%D9%90%D9%8A%D9%84%D9%8B%D8%A7&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <noscript><link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Aref+Ruqaa:wght@700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet"></noscript>
-<meta name="theme-color" content="#1b4d36">
+<meta name="theme-color" content="#f6f1e7">
+<script>(function(){try{if(localStorage.getItem("biz-theme")==="dark"){document.documentElement.setAttribute("data-theme","dark");document.querySelector('meta[name="theme-color"]').content="#0b1711";}}catch(e){}})();</script>
 <link rel="canonical" href="https://baitulizzah.online/">
 <link rel="alternate" hreflang="en" href="https://baitulizzah.online/">
 <link rel="alternate" hreflang="x-default" href="https://baitulizzah.online/">
@@ -1255,6 +1256,111 @@
   @media (prefers-reduced-motion: reduce) {
     .fade-in, .mobile-nav a { transform: none !important; transition: opacity 0.3s linear; }
   }
+
+  /* ===== LIGHT THEME (default) — html[data-theme="dark"] switches back to the night theme ===== */
+  html:not([data-theme="dark"]) {--night: #f6f1e7; --cream: #f6f1e7; --warm-white: #f6f1e7; --dark: #14271b; --text: #3b4136; --text-light: #5f685a; --soft-green: #2d6a4f; --mid-green: #40916c; --gold-light: #9a7420; --border: rgba(20,39,27,0.1); --beige: rgba(20,39,27,0.12); --pale-green: rgba(45,106,79,0.08); --glass-bg: rgba(255,255,255,0.55); --glass-border: rgba(20,39,27,0.08); --glass-border-hover: rgba(154,116,32,0.4); --glass-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 18px 44px rgba(70,55,20,0.08); --ink-gradient: linear-gradient(90deg, #14271b 0%, #24452f 55%, #8a6a1c 100%); }
+  html:not([data-theme="dark"]) body {background: var(--night); color: var(--text); }
+  html:not([data-theme="dark"]) body::before {background: radial-gradient(40vw 40vw at 85% 12%, rgba(240,190,100,0.22), transparent 70%), radial-gradient(45vw 45vw at 6% 68%, rgba(116,198,157,0.18), transparent 70%), radial-gradient(30vw 30vw at 60% 96%, rgba(240,190,100,0.14), transparent 70%); }
+  html:not([data-theme="dark"]) body::after {opacity: 0.9; }
+  html:not([data-theme="dark"]) ::selection {background: rgba(154,116,32,0.25); color: var(--dark); }
+  html:not([data-theme="dark"]) nav, html:not([data-theme="dark"]) nav.scrolled {background: rgba(255,255,255,0.55); border-color: rgba(20,39,27,0.08); box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 10px 30px rgba(70,55,20,0.08); }
+  html:not([data-theme="dark"]) nav.scrolled {background: rgba(255,255,255,0.78); border-color: rgba(154,116,32,0.2); }
+  html:not([data-theme="dark"]) .nav-logo {color: var(--dark); }
+  html:not([data-theme="dark"]) .nav-links a {color: rgba(20,39,27,0.7); }
+  html:not([data-theme="dark"]) .nav-links a:hover {color: var(--dark); background: rgba(20,39,27,0.05); }
+  html:not([data-theme="dark"]) .nav-links a.active {color: var(--dark); background: rgba(154,116,32,0.1); box-shadow: inset 0 0 0 1px rgba(154,116,32,0.28); }
+  html:not([data-theme="dark"]) .hamburger {background: rgba(20,39,27,0.04); border-color: rgba(20,39,27,0.1); }
+  html:not([data-theme="dark"]) .hamburger span {background: var(--dark); }
+  html:not([data-theme="dark"]) .mobile-nav {background: rgba(255,255,255,0.88); border-color: rgba(20,39,27,0.08); box-shadow: 0 24px 60px rgba(70,55,20,0.16); }
+  html:not([data-theme="dark"]) .mobile-nav a {color: var(--dark); }
+  html:not([data-theme="dark"]) .mobile-nav a:hover {background: rgba(20,39,27,0.05); color: var(--dark); }
+  html:not([data-theme="dark"]) .nav-cta, html:not([data-theme="dark"]) .mobile-nav a.nav-cta, html:not([data-theme="dark"]) .btn-primary, html:not([data-theme="dark"]) .contact .btn-primary, html:not([data-theme="dark"]) .hero-btn-primary {background: var(--soft-green); color: #fff; }
+  html:not([data-theme="dark"]) .nav-cta:hover, html:not([data-theme="dark"]) .mobile-nav a.nav-cta:hover, html:not([data-theme="dark"]) .btn-primary:hover, html:not([data-theme="dark"]) .hero-btn-primary:hover {background: #245a42; box-shadow: 0 10px 28px rgba(45,106,79,0.28); }
+  html:not([data-theme="dark"]) .contact .btn-primary {background: #e8cb7a; color: #1a1406; }
+  html:not([data-theme="dark"]) .contact .btn-primary:hover {background: #f1d891; }
+  html:not([data-theme="dark"]) .hero {--hero-bg: transparent; background: transparent; color: var(--dark); }
+  html:not([data-theme="dark"]) .hero-pattern svg g {stroke: #b08a34; stroke-opacity: 0.4; }
+  html:not([data-theme="dark"]) .hero-rays {background: repeating-conic-gradient(from 0deg, rgba(220,160,60,0.16) 0deg 3deg, transparent 3deg 14deg, rgba(220,160,60,0.08) 14deg 16deg, transparent 16deg 30deg); }
+  html:not([data-theme="dark"]) .lantern-glow {background: radial-gradient(circle, rgba(255,196,100,0.55) 0%, rgba(240,170,70,0.2) 30%, rgba(240,170,70,0) 66%); }
+  html:not([data-theme="dark"]) .hero h1, html:not([data-theme="dark"]) .section-title, html:not([data-theme="dark"]) .teacher-name {background: var(--ink-gradient); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  html:not([data-theme="dark"]) .hero-sub {color: var(--text-light); }
+  html:not([data-theme="dark"]) .hero-btn-ghost {color: var(--dark); background: rgba(255,255,255,0.5); border-color: rgba(20,39,27,0.18); }
+  html:not([data-theme="dark"]) .hero-btn-ghost:hover {background: rgba(255,255,255,0.8); border-color: rgba(20,39,27,0.35); }
+  html:not([data-theme="dark"]) .hero-btn:focus-visible {outline-color: var(--soft-green); }
+  html:not([data-theme="dark"]) .hero-ayah {background: rgba(255,255,255,0.55); border-color: rgba(154,116,32,0.25); box-shadow: 0 18px 44px rgba(70,55,20,0.1); }
+  html:not([data-theme="dark"]) .hero-ayah-translation {color: var(--text-light); }
+  html:not([data-theme="dark"]) .hero-ayah-ref {color: var(--gold-light); }
+  html:not([data-theme="dark"]) .stats-bar {background: rgba(255,255,255,0.6); border-color: rgba(20,39,27,0.08); }
+  html:not([data-theme="dark"]) .stat {color: var(--dark); }
+  html:not([data-theme="dark"]) .stat-lbl {color: var(--text-light); }
+  html:not([data-theme="dark"]) .stat + .stat::before {background: rgba(20,39,27,0.1); }
+  html:not([data-theme="dark"]) .courses {color: var(--text); }
+  html:not([data-theme="dark"]) .courses-ayah {color: var(--gold-light); text-shadow: none; }
+  html:not([data-theme="dark"]) .courses-ayah-ref {color: rgba(154,116,32,0.8); }
+  html:not([data-theme="dark"]) .course-card {box-shadow: var(--glass-shadow); }
+  html:not([data-theme="dark"]) .course-card:hover {box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 28px 56px rgba(70,55,20,0.14), 0 0 40px rgba(240,190,100,0.18); }
+  html:not([data-theme="dark"]) .course-title {color: var(--dark); }
+  html:not([data-theme="dark"]) .course-tag {background: rgba(154,116,32,0.08); border-color: rgba(154,116,32,0.3); }
+  html:not([data-theme="dark"]) .teacher {color: var(--text); }
+  html:not([data-theme="dark"]) .teacher-title, html:not([data-theme="dark"]) .teacher-bio {color: var(--text); }
+  html:not([data-theme="dark"]) .teacher-title {color: var(--text-light); }
+  html:not([data-theme="dark"]) .qual-text {color: var(--text); }
+  html:not([data-theme="dark"]) .teacher-badge-wrap, html:not([data-theme="dark"]) .why-icon, html:not([data-theme="dark"]) .review-avatar {background: var(--gold-light); color: #fff; }
+  html:not([data-theme="dark"]) .video-label::before {color: #fff; }
+  html:not([data-theme="dark"]) .videos-title {color: var(--dark); }
+  html:not([data-theme="dark"]) .review-author {border-top-color: rgba(20,39,27,0.08); }
+  html:not([data-theme="dark"]) .reg-input, html:not([data-theme="dark"]) .reg-select {background-color: rgba(255,255,255,0.65); color: var(--dark); border-color: rgba(20,39,27,0.12); }
+  html:not([data-theme="dark"]) .reg-input::placeholder {color: rgba(20,39,27,0.38); }
+  html:not([data-theme="dark"]) .reg-input:focus, html:not([data-theme="dark"]) .reg-select:focus, html:not([data-theme="dark"]) .multi-box:focus-within {background-color: #fff; border-color: rgba(45,106,79,0.55); box-shadow: 0 0 0 3px rgba(45,106,79,0.12); }
+  html:not([data-theme="dark"]) .reg-select {background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%232d6a4f' stroke-width='2' fill='none'/%3E%3C/svg%3E"); }
+  html:not([data-theme="dark"]) .reg-select option {background: #fff; color: var(--dark); }
+  html:not([data-theme="dark"]) .reg-group {background: rgba(255,255,255,0.35); border-color: rgba(154,116,32,0.3); }
+  html:not([data-theme="dark"]) .reg-radios label {background: rgba(255,255,255,0.6); border-color: rgba(20,39,27,0.12); color: var(--dark); }
+  html:not([data-theme="dark"]) .reg-radios label:has(input:checked) {background: rgba(45,106,79,0.08); border-color: rgba(45,106,79,0.5); color: var(--soft-green); }
+  html:not([data-theme="dark"]) .reg-radios input, html:not([data-theme="dark"]) .reg-check input {accent-color: var(--soft-green); }
+  html:not([data-theme="dark"]) .multi-box input {color: var(--dark); }
+  html:not([data-theme="dark"]) .combo-list {background: rgba(255,255,255,0.96); border-color: rgba(20,39,27,0.1); box-shadow: 0 20px 48px rgba(70,55,20,0.16); }
+  html:not([data-theme="dark"]) .combo-list li {color: var(--dark); }
+  html:not([data-theme="dark"]) .combo-list li.active, html:not([data-theme="dark"]) .combo-list li:hover {background: rgba(45,106,79,0.08); color: var(--soft-green); }
+  html:not([data-theme="dark"]) .combo.multi li.checked::before {background: var(--soft-green); color: #fff; }
+  html:not([data-theme="dark"]) .combo.multi li[data-i]::before {border-color: rgba(45,106,79,0.6); }
+  html:not([data-theme="dark"]) .reg-err, html:not([data-theme="dark"]) .reg-field .req {color: #c0392b; }
+  html:not([data-theme="dark"]) .reg-input.invalid, html:not([data-theme="dark"]) .reg-select.invalid {border-color: #c0392b; }
+  html:not([data-theme="dark"]) .reg-done {background: rgba(45,106,79,0.08); border-color: rgba(45,106,79,0.3); color: var(--soft-green); }
+  html:not([data-theme="dark"]) .contact-panel {background: rgba(20,61,44,0.94); border-color: rgba(232,203,122,0.3); box-shadow: 0 30px 70px rgba(20,61,44,0.3); }
+  html:not([data-theme="dark"]) .contact-panel {--gold-light: #e8cb7a; }
+  html:not([data-theme="dark"]) .contact .section-title {background: linear-gradient(90deg, #ffffff 0%, #f3e6c4 60%, #cdb27a 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  html:not([data-theme="dark"]) .footer-inner {background: rgba(20,39,27,0.96); border-color: rgba(20,39,27,0.2); --gold-light: #e8cb7a; }
+  html:not([data-theme="dark"]) footer {color: rgba(255,255,255,0.8); }
+  html:not([data-theme="dark"]) .footer-inner .btn-primary {background: #e8cb7a; color: #1a1406; }
+
+  /* Theme toggle */
+  .nav-actions { display: flex; align-items: center; gap: 8px; }
+  .theme-toggle {
+    position: relative; width: 40px; height: 40px; flex-shrink: 0;
+    display: grid; place-items: center; cursor: pointer;
+    border-radius: 9999px; padding: 0;
+    color: var(--gold-light);
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+    transition: background-color 0.3s var(--ease-out), border-color 0.3s var(--ease-out), transform 0.5s var(--ease-out);
+  }
+  .theme-toggle:hover { background: rgba(255,255,255,0.12); border-color: rgba(232,203,122,0.4); }
+  .theme-toggle:active { transform: scale(0.94); }
+  .theme-toggle:focus-visible { outline: 2px solid var(--gold-light); outline-offset: 2px; }
+  .theme-toggle svg { position: absolute; width: 20px; height: 20px; transition: transform 0.5s var(--ease-out), opacity 0.3s var(--ease-out); }
+  /* dark: show sun (switch to light) */
+  .theme-toggle .i-moon { opacity: 0; transform: rotate(-90deg) scale(0.5); }
+  .theme-toggle .i-sun { opacity: 1; transform: none; }
+  html:not([data-theme="dark"]) .theme-toggle { color: var(--soft-green); background: rgba(20,39,27,0.04); border-color: rgba(20,39,27,0.1); }
+  html:not([data-theme="dark"]) .theme-toggle:hover { background: rgba(20,39,27,0.08); border-color: rgba(45,106,79,0.35); }
+  html:not([data-theme="dark"]) .theme-toggle .i-sun { opacity: 0; transform: rotate(90deg) scale(0.5); }
+  html:not([data-theme="dark"]) .theme-toggle .i-moon { opacity: 1; transform: none; }
+  html.theme-anim, html.theme-anim *, html.theme-anim *::before, html.theme-anim *::after {
+    transition: background-color 0.4s var(--ease-out), color 0.4s var(--ease-out), border-color 0.4s var(--ease-out), fill 0.4s var(--ease-out), stroke 0.4s var(--ease-out) !important;
+  }
+  .reg-submit:disabled { opacity: 0.7; cursor: default; transform: none; }
+  .reg-done-title { font-weight: 700; margin-bottom: 4px !important; }
+  .reg-done-sub { font-weight: 400 !important; font-size: 14px; line-height: 20px; opacity: 0.9; }
 </style>
 </head>
 <body>
@@ -1272,9 +1378,15 @@
     <li><a href="#faq">FAQ</a></li>
     <li><a href="#contact">Contact</a></li>
   </ul>
-  <a href="#register" class="nav-cta">Register Now</a>
-  <div class="hamburger" id="hamburger">
-    <span></span><span></span><span></span>
+  <div class="nav-actions">
+    <button type="button" class="theme-toggle" id="themeToggle" aria-label="Switch to dark theme" aria-pressed="false">
+      <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 1 1 9.8 3.5a7 7 0 0 0 10.7 10.7z"/></svg>
+      <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2M12 19.5v2M4.6 4.6 6 6M18 18l1.4 1.4M2.5 12h2M19.5 12h2M4.6 19.4 6 18M18 6l1.4-1.4"/></svg>
+    </button>
+    <a href="#register" class="nav-cta">Register Now</a>
+    <div class="hamburger" id="hamburger">
+      <span></span><span></span><span></span>
+    </div>
   </div>
 </nav>
 
@@ -1793,7 +1905,7 @@
       </details>
       <details class="faq-item">
         <summary><h3>How do I register?</h3></summary>
-        <p>Fill in the registration form at the bottom of this page and tap “Submit via WhatsApp”. Your details are sent to us on WhatsApp, and we reply to agree a class schedule that fits your time zone.</p>
+        <p>Fill in the registration form at the bottom of this page and tap “Submit registration”. We receive your details straight away and reply on WhatsApp to agree a class schedule that fits your time zone.</p>
       </details>
   </div>
 </section>
@@ -1822,7 +1934,7 @@
   <div class="register-head fade-in">
     <div class="section-eyebrow">Admission Form</div>
     <h2 class="section-title">Register for <em>Classes</em></h2>
-    <p class="section-desc">Fill in the details below and tap submit — your registration will be sent to us on WhatsApp and we'll get back to you, In sha Allah.</p>
+    <p class="section-desc">Fill in the details below and tap submit. We receive your registration straight away and will contact you on WhatsApp to arrange your classes, In sha Allah.</p>
   </div>
 
   <form class="reg-form fade-in" id="regForm" novalidate autocomplete="on">
@@ -1940,15 +2052,15 @@
     </div>
 
     <div class="reg-actions">
-      <button type="submit" class="btn-wa reg-submit">💬 Submit via WhatsApp</button>
-      <span class="reg-note">Fields marked <span style="color:#c0392b">*</span> are required. WhatsApp will open with your details ready to send.</span>
+      <button type="submit" class="btn-primary reg-submit" id="regSubmit">Submit registration</button>
+      <span class="reg-note">Fields marked <span style="color:#c0392b">*</span> are required. Your details are saved securely and only seen by the academy.</span>
     </div>
 
     <div class="reg-done" id="regDone" role="status" aria-live="polite">
-      <p>✅ Your details are ready! If WhatsApp didn't open, tap the button below to send them.</p>
+      <p class="reg-done-title">JazakAllah khair<span id="regDoneName"></span>. Your registration has been received.</p>
+      <p class="reg-done-sub">We will message you on WhatsApp to agree a class time, In sha Allah. If you would like to talk now, you can also chat with us directly.</p>
       <div class="contact-btns">
-        <a href="#" target="_blank" rel="noopener" class="btn-wa" id="regWaLink">💬 Send on WhatsApp</a>
-        <button type="button" class="btn-primary" id="regCopy">📋 Copy Details</button>
+        <a href="https://wa.me/923167959923" target="_blank" rel="noopener" class="btn-wa" id="regWaLink">Chat on WhatsApp</a>
       </div>
     </div>
   </form>
@@ -2275,7 +2387,7 @@ document.addEventListener('click', (e) => {
     return !first;
   }
 
-  // --- Submit: always try to deliver the responses to WhatsApp ---
+  // --- Submit: save the registration on site (Google Sheet + email alert); WhatsApp chat is optional ---
   form.addEventListener('submit', e => {
     e.preventDefault();
     if (!validate()) { sendToSheet('Incomplete'); return; }
@@ -2283,35 +2395,14 @@ document.addEventListener('click', (e) => {
     clearTimeout(saveTimer);
     sendToSheet('Submitted');
     const msg = buildMessage();
-    const url = 'https://wa.me/' + ACADEMY_WA + '?text=' + encodeURIComponent(msg);
-
-    // Fallback panel is shown every time, so the details can still be sent
-    // if WhatsApp doesn't open (popup blocked, app missing, network error…)
-    $('regWaLink').href = url;
+    const first = val('rFullName').split(/\s+/)[0];
+    $('regDoneName').textContent = first ? ', ' + first : '';
+    $('regWaLink').href = 'https://wa.me/' + ACADEMY_WA + '?text=' + encodeURIComponent(msg);
+    const btn = $('regSubmit');
+    btn.disabled = true; btn.textContent = 'Registration received';
     $('regDone').classList.add('show');
-    form.dataset.msg = msg;
-
     $('regDone').scrollIntoView({ behavior: 'smooth', block: 'center' });
-    openWhatsApp(url);
   });
-
-  // Open WhatsApp as reliably as possible across phones, desktops and in-app browsers
-  function openWhatsApp(url) {
-    const isMobile = /Android|iPhone|iPad|iPod|Mobile|Opera Mini|IEMobile/i.test(navigator.userAgent);
-    if (isMobile) {
-      // Phones: same-tab navigation hands off straight to the WhatsApp app (no popup to block)
-      try { window.top.location.href = url; return; } catch (e) {}
-      try { window.location.href = url; return; } catch (e) {}
-    } else {
-      // Desktop: new tab with WhatsApp Web; if blocked, use the current tab
-      let w = null;
-      try { w = window.open(url, '_blank'); } catch (e) { w = null; }
-      if (w) { try { w.opener = null; } catch (e) {} return; }
-      try { window.top.location.href = url; return; } catch (e) {}
-      try { window.location.href = url; } catch (e) {}
-    }
-    // If everything above was blocked, the "Send on WhatsApp" / "Copy Details" panel stays visible
-  }
 
   // Hide the floating WhatsApp bubble while the form is on screen so it can't cover the submit button
   const waFloat = document.querySelector('.wa-float');
@@ -2320,16 +2411,6 @@ document.addEventListener('click', (e) => {
       .observe(form);
   }
 
-  $('regCopy').addEventListener('click', async () => {
-    const msg = form.dataset.msg || buildMessage();
-    const btn = $('regCopy');
-    try { await navigator.clipboard.writeText(msg); }
-    catch (err) {
-      const t = document.createElement('textarea'); t.value = msg; document.body.appendChild(t);
-      t.select(); try { document.execCommand('copy'); } catch (_) {} t.remove();
-    }
-    btn.textContent = '✅ Copied — paste in WhatsApp to +92 316 7959923';
-  });
 })();
 
 // YouTube: load the heavy player only when the visitor taps play
@@ -2453,8 +2534,9 @@ document.querySelectorAll('.yt-lite').forEach(btn => btn.addEventListener('click
       const dist = Math.hypot(m.x - cx, m.y - cy);
       const near = Math.max(0, 1 - dist / (Math.min(w, h) * 0.75));
       ctx.globalAlpha = fade * (0.25 + near * 0.75);
-      ctx.fillStyle = '#ffd98a';
-      ctx.shadowColor = 'rgba(255, 200, 110, 0.9)';
+      const darkMode = document.documentElement.getAttribute('data-theme') === 'dark';
+      ctx.fillStyle = darkMode ? '#ffd98a' : '#c08a2a';
+      ctx.shadowColor = darkMode ? 'rgba(255, 200, 110, 0.9)' : 'rgba(220, 160, 60, 0.6)';
       ctx.shadowBlur = 8;
       ctx.beginPath(); ctx.arc(m.x, m.y, m.r, 0, Math.PI * 2); ctx.fill();
     }
@@ -2486,6 +2568,28 @@ if (window.scrollY > 40) document.querySelector('nav').classList.add('scrolled')
     if (e.isIntersecting) { links.forEach(l => l.classList.remove('active')); const a = map.get(e.target.id); if (a) a.classList.add('active'); }
   }), { rootMargin: '-45% 0px -50% 0px' });
   map.forEach((a, id) => { const el = document.getElementById(id); if (el) io.observe(el); });
+})();
+
+// Theme toggle: light by default, remembers the visitor's choice
+(function () {
+  const root = document.documentElement, btn = document.getElementById('themeToggle');
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (!btn) return;
+  function sync() {
+    const dark = root.getAttribute('data-theme') === 'dark';
+    btn.setAttribute('aria-pressed', dark ? 'true' : 'false');
+    btn.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
+    if (meta) meta.content = dark ? '#0b1711' : '#f6f1e7';
+  }
+  btn.addEventListener('click', () => {
+    const dark = root.getAttribute('data-theme') !== 'dark';
+    root.classList.add('theme-anim');
+    if (dark) root.setAttribute('data-theme', 'dark'); else root.removeAttribute('data-theme');
+    try { localStorage.setItem('biz-theme', dark ? 'dark' : 'light'); } catch (e) {}
+    sync();
+    setTimeout(() => root.classList.remove('theme-anim'), 450);
+  });
+  sync();
 })();
 </script>
 
